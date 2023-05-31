@@ -1,0 +1,15 @@
+LoRA:
+  LowRA: dark theme, <lora:LowRA:0.75>
+  Noise Offset: dark studio, rim lighting, two tone lighting, dimly lit, low key, <lora:epiNoiseoffset_v2:0.75>
+
+Subject:
+  1girl: 1girl, solo
+  2girls: 2girls, multiple_girls
+
+Expression:
+  Happy: smile, blush
+  Sad: frown, tears
+
+Pose:
+  Sit: sitting, crossed_legs
+  Stand: full_body, standing
