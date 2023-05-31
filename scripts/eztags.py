@@ -12,18 +12,18 @@ class EasyTags(scripts.Script):
         return scripts.AlwaysVisible
 
     def ui(self, is_img2img):
+        global DUMMY
+        if not is_img2img:
+            DUMMY = gr.Textbox(interactive=False, visible=False, elem_id = 'ez-tag-textbox')
+
         COLLECTION = reload_yaml()
 
         if not is_img2img:
-            global DUMMY
-            DUMMY = gr.Textbox(interactive=False, visible=False, elem_id = 'ez-tag-textbox')
-
             enable_btn = gr.Button('🍀', elem_id = 'ez-tag-toggle-txt', full_width = False)
 
             with gr.Box(elem_id = 'ez-tag-container-txt'):
                 for key in COLLECTION.keys():
                     with gr.Tab(key, elem_id = 'tab-' + key.replace(' ', '-').lower() + '-txt'):
-
                         tags = COLLECTION[key]
 
                         with gr.Row():
@@ -44,7 +44,6 @@ class EasyTags(scripts.Script):
             with gr.Box(elem_id = 'ez-tag-container-img'):
                 for key in COLLECTION.keys():
                     with gr.Tab(key, elem_id = 'tab-' + key.replace(' ', '-').lower() + '-img'):
-
                         tags = COLLECTION[key]
 
                         with gr.Row():

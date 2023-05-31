@@ -37,7 +37,6 @@ Category:
 
 #### Note
 - You can have multiple `.yml` *(or `.yaml`)* files in the `tags` folder
-- But you **cannot** have duplicated Categories in multiple files. Otherwise it will only load the tags from the last file.
 - An example file is provided
     - *The LoRA ones only work if you do have them*
 

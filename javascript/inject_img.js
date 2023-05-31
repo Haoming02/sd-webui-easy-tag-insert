@@ -7,7 +7,7 @@
 
 			const textArea = gradioApp().getElementById(id).querySelector('textarea')
 
-			var prompt = textArea.value.trim()
+			let prompt = textArea.value.trim()
 
 			if (prompt.includes(button.id)) {
 				if (prompt.includes(', ' + button.id))
@@ -48,12 +48,10 @@
 			ez_container.style.display = this.isOn ? 'block' : 'none'
 		})
 
-		extraNetwork.addEventListener('click',
-			() => {
-				if (ez_container.style.display != 'none')
-					button.dispatchEvent(new Event('click'))
-			}
-		)
+		extraNetwork.addEventListener('click', () => {
+			if (ez_container.style.display != 'none')
+				button.dispatchEvent(new Event('click'))
+		})
 
 		const applyStyle = img2imgActionColumn.children[3]
 		img2imgActionColumn.insertBefore(button, applyStyle)
@@ -71,14 +69,14 @@
 			let section = document.getElementById('tab-' + key.replace(/ /g, '-').toLowerCase() + '-img')
 			let buttons = section.getElementsByTagName('button')
 
-			const dictKeys = Object.keys(dictionary[key]);
+			const dictKeys = Object.keys(dictionary[key])
 			const btnKeys = []
 
 			for (let i = 0; i < buttons.length; i++)
 				btnKeys[i] = buttons[i].innerText
 
-			const toDelete = btnKeys.filter(x => !dictKeys.includes(x));
-			const toAdd = dictKeys.filter(x => !btnKeys.includes(x));
+			const toDelete = btnKeys.filter(x => !dictKeys.includes(x))
+			const toAdd = dictKeys.filter(x => !btnKeys.includes(x))
 
 			for (let i = 0; i < toAdd.length; i++) {
 				let newBtn = buttons[0].cloneNode()
@@ -98,9 +96,8 @@
 
 			buttons = section.getElementsByTagName('button')
 
-			for (let i = 0; i < buttons.length; i++) {
+			for (let i = 0; i < buttons.length; i++)
 				buttons[i].id = dictionary[key][buttons[i].innerText]
-			}
 		}
 	}
 }
@@ -114,17 +111,17 @@ onUiLoaded(async () => {
 
 	const refresh_btn = document.getElementById('ez-tag-refresh-img')
 	refresh_btn.addEventListener('click', () => {
-		setTimeout(pollCollection, 250);
+		setTimeout(pollCollection, 250)
 	})
 
 	const to_negative = document.getElementById('ez-tag-negative-img')
 	to_negative.classList.remove('block')
 
-	to_negative.style.margin = '0.3em';
+	to_negative.style.margin = '0.3em'
 	to_negative.style.marginLeft = '4'
 	to_negative.style.marginRight = 0
 
-	refresh_btn.style.margin = '0.3em';
+	refresh_btn.style.margin = '0.3em'
 	refresh_btn.style.marginLeft = 'auto'
 	refresh_btn.style.marginRight = 0
 
@@ -141,9 +138,8 @@ onUiLoaded(async () => {
 		let buttons = tab.querySelectorAll("button")
 
 		buttons.forEach((button) => {
-			if (!button.id.includes('ez-tag')) {
+			if (!button.id.includes('ez-tag'))
 				LeInjector_IMG.injectButton(button)
-			}
 		})
 	})
 

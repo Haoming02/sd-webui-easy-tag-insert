@@ -5,6 +5,15 @@ import os
 
 TAGS_FOLDER = Path(scripts.basedir()).joinpath('tags')
 
+def merge_dicts(dict1, dict2):
+    DICT = dict1.copy()
+    for key, value in dict2.items():
+        if key in DICT and isinstance(DICT[key], dict) and isinstance(value, dict):
+            DICT[key] = merge_dicts(DICT[key], value)
+        else:
+            DICT[key] = value
+    return DICT
+
 def reload_yaml():
     COLLECTION = {}
 
@@ -14,6 +23,6 @@ def reload_yaml():
             continue
 
         with open(TAGS_FOLDER.joinpath(FILE)) as stream:
-            COLLECTION.update(yaml.safe_load(stream))
+            COLLECTION = merge_dicts(COLLECTION, yaml.safe_load(stream))
 
     return COLLECTION

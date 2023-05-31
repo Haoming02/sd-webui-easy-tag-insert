@@ -1,6 +1,6 @@
 ﻿function pollCollection() {
 	const dummy = document.getElementById('ez-tag-textbox').querySelector('textarea')
-	if (dummy.value.length < 1) { setTimeout(pollCollection, 100); }
+	if (dummy.value.length < 1) { setTimeout(pollCollection, 100) }
 
 	else {
 		const dictionary = JSON.parse(dummy.value.replace(/'/g, '"'));
