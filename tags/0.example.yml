@@ -6,6 +6,6 @@ Subject:
   1girl: 1girl, solo
   2girls: 2girls, multiple_girls
 
-Expression:
-  Happy: smile, blush
-  Sad: frown, tears
+Starting Prompts:
+  Positive: (high quality, best quality)
+  Negative: (low quality, worst quality:1.2)

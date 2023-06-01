@@ -13,8 +13,7 @@ class EasyTags(scripts.Script):
 
     def ui(self, is_img2img):
         global DUMMY
-        if not is_img2img:
-            DUMMY = gr.Textbox(interactive=False, visible=False, elem_id = 'ez-tag-textbox')
+        DUMMY = gr.Textbox(interactive=False, visible=False, elem_id = 'ez-tag-textbox') if not is_img2img else DUMMY
 
         COLLECTION = reload_yaml()
 

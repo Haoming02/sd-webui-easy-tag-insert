@@ -21,7 +21,7 @@ Character:
 ```
 This way, you will only need to click 1 button to add the trigger words as well as the syntax.
 
-You can also just use this as simple shortcuts for long prompts:
+You can also just use this Extension as a way to simply make shortcuts for long prompts:
 ```yml
 Starting Prompts:
   Positive: (high quality, best quality)
@@ -34,11 +34,25 @@ The tags are loaded from the `.yml` files inside the `tags` folder. To add your 
 Category:
   Display Name: Actual Prompts
 ```
+> That's 2 `spaces` instead of a `tab` character, as specified by YAML
 
 #### Note
-- You can have multiple `.yml` *(or `.yaml`)* files in the `tags` folder
-- An example file is provided
-    - *The LoRA ones only work if you do have them*
+- The tabs appear in the order they were written in the files. So write your most-used Category first!
+  - Since files are ordered alphabetically, you can add numbers in front to force a certain order instead.
+- You can have multiple `.yml` *(or `.yaml`)* files in the `tags` folder for better organizations
+  - You can also have the same Category in multiple files. For example:
+    - `male.yml`:
+        ```yml
+        Arknights:
+          Silverash: trigger, <lora>
+        ```
+    - `female.yml`:
+        ```yml
+        Arknights:
+          Blaze: trigger, <lora>
+        ```
+    - They will still show up in the same tab
+- Some placeholder sample files are provided
 
 ## Special Thanks
-This Extension is inspired by [Easy Prompt Selector](https://github.com/blue-pen5805/sdweb-easy-prompt-selector)~
+This Extension was inspired by [Easy Prompt Selector](https://github.com/blue-pen5805/sdweb-easy-prompt-selector)~
