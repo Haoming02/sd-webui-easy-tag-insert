@@ -36,7 +36,7 @@ Category:
 ```
 > That's 2 `spaces` instead of a `tab` character, as specified by YAML
 
-#### Note
+### Note
 - The tabs appear in the order they were written in the files. So write your most-used Category first!
   - Since files are ordered alphabetically, you can add numbers in front to force a certain order instead.
 - You can have multiple `.yml` *(or `.yaml`)* files in the `tags` folder for better organizations
@@ -53,6 +53,7 @@ Category:
         ```
     - They will still show up in the same tab
 - Some placeholder sample files are provided
+    - If no `tags` folder is present, it will automatically rename the `samples` folder to `tags`. This is to avoid overriding users' local files.
 
 ## Special Thanks
 This Extension was inspired by [Easy Prompt Selector](https://github.com/blue-pen5805/sdweb-easy-prompt-selector)~

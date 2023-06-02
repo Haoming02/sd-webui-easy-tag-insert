@@ -3,6 +3,7 @@ import modules.scripts as scripts
 import ruamel.yaml as yaml
 import os
 
+SAMP_FOLDER = Path(scripts.basedir()).joinpath('samples')
 TAGS_FOLDER = Path(scripts.basedir()).joinpath('tags')
 
 def merge_dictionary(dict1, dict2):
@@ -15,6 +16,10 @@ def merge_dictionary(dict1, dict2):
     return DICT
 
 def reload_yaml():
+    if not os.path.exists(TAGS_FOLDER):
+        print('\n[Easy Tag Insert]: Folder "tags" not found. Initializing...\n')
+        os.rename(SAMP_FOLDER, TAGS_FOLDER)
+
     COLLECTION = {}
 
     for FILE in os.listdir(TAGS_FOLDER):
