@@ -1,21 +1,26 @@
 ﻿class le_Injector {
 
 	constructor() {
-		this.toprows = injectUtil.getToprows();
-		this.ez_containers = injectUtil.getContainers();
-		this.tabs = injectUtil.getTabs(this.ez_containers);
-		this.refresh_btns = injectUtil.getRefresh();
-		this.to_negatives = injectUtil.getToNeg();
-		this.tabRows = injectUtil.getTabRows(this.ez_containers);
+		this.toprows = injectUtils.getToprows()
+		this.containers = injectUtils.getContainers()
+		this.tabNavs = injectUtils.getTabNavs(this.containers)
+		this.refresh_btns = injectUtils.getRefreshs()
+		this.to_negatives = injectUtils.getToNegs()
+		this.tabRows = injectUtils.getTabRows(this.containers)
 		this.isOns = [false, false]
+		this.cachedDict = null
+		this.dummy = document.getElementById('ez-tag-textbox').querySelector('textarea')
+
+		this.extraBtnCount = 1
+		this.applyBtnIndex = 3
 	}
 
 	injectButton(button, index) {
-		const mode = injectUtil.Modes[index]
+		const mode = injectUtils.Modes[index]
 
 		button.addEventListener('click', () => {
 			const checkbox = this.to_negatives[index].querySelector('input[type=checkbox]')
-			const id = checkbox.checked ? mode + '2img_neg_prompt' : mode + '2img_prompt'
+			const id = mode + (checkbox.checked ? '2img_neg_prompt' : '2img_prompt')
 			const textArea = gradioApp().getElementById(id).querySelector('textarea')
 
 			let prompt = textArea.value.trim()
@@ -42,34 +47,45 @@
 		})
 	}
 
-	pollCollection = () => {
-		const dummy = document.getElementById('ez-tag-textbox').querySelector('textarea')
-		if (dummy.value.length < 1) { setTimeout(this.pollCollection, 100) }
-
+	pollCollection = (tryIteration) => {
+		// First Refresh
+		if (!this.cachedDict) {
+			if (this.dummy.value.length < 1) {
+				setTimeout(() => { this.pollCollection(69) }, 25)
+				return;
+			}
+		}	// Subsequent Refresh
 		else {
-			const dictionary = JSON.parse(dummy.value.replace(/'/g, '"'));
-
-			this.reconstructUI(dictionary)
+			if (tryIteration > 5) {
+				console.log("[EasyTagInsert]: Refresh Timeout!")
+				return;
+			}
+			if (this.dummy.value == this.cachedDict) {
+				setTimeout(() => { this.pollCollection(tryIteration + 1) }, 100)
+				return;
+			}
 		}
+
+		this.cachedDict = this.dummy.value
+		const dictionary = JSON.parse(this.dummy.value.replace(/'/g, '"').replace(/None/g, '""'))
+		this.reconstructUI(dictionary)
 	}
 
 	reconstructUI(dictionary) {
-		for (let index = injectUtil.TXT2IMG; index <= injectUtil.IMG2IMG; index++) {
+		if (Object.keys(dictionary).length !== this.tabNavs[injectUtils.TXT2IMG].getElementsByTagName('button').length - this.extraBtnCount) {
+			alert('Modifying Categories is not Supported yet!')
+			return;
+		}
 
-			const mode = injectUtil.Modes[index]
+		for (let index = injectUtils.TXT2IMG; index <= injectUtils.IMG2IMG; index++) {
+			const mode = injectUtils.Modes[index]
 
-			if (injectUtil.checkTabCount(Object.keys(dictionary).length, this.tabs[index].getElementsByTagName('button').length - 1))
-				return;
-
-			for (var key in dictionary) {
-				let section = document.getElementById('tab-' + key.replace(/ /g, '-').toLowerCase() + '-' + mode)
+			for (let key in dictionary) {
+				const section = document.getElementById('tab-' + key.replace(/ /g, '-').toLowerCase() + '-' + mode)
 				let buttons = section.getElementsByTagName('button')
 
-				const dictKeys = Object.keys(dictionary[key])
-				const btnKeys = []
-
-				for (let i = 0; i < buttons.length; i++)
-					btnKeys[i] = buttons[i].innerText
+				const btnKeys = Array.from(buttons).map(button => button.innerText)
+				const dictKeys = Object.keys(dictionary[key]).filter(k => dictionary[key][k] != "")
 
 				const toDelete = btnKeys.filter(x => !dictKeys.includes(x))
 				const toAdd = dictKeys.filter(x => !btnKeys.includes(x))
@@ -95,12 +111,11 @@
 				for (let i = 0; i < buttons.length; i++)
 					buttons[i].id = dictionary[key][buttons[i].innerText]
 			}
-
 		}
 	}
 
 	openButton(index) {
-		const mode = injectUtil.Modes[index]
+		const mode = injectUtils.Modes[index]
 
 		const button = document.getElementById('ez-tag-toggle-' + mode)
 		const extraNetwork = document.getElementById(mode + '2img_extra_networks')
@@ -115,29 +130,27 @@
 				extraNetwork.dispatchEvent(new Event('click'))
 
 			this.isOns[index] = !this.isOns[index]
-			this.ez_containers[index].style.display = this.isOns[index] ? 'block' : 'none'
+			this.containers[index].style.display = this.isOns[index] ? 'block' : 'none'
 		})
 
 		extraNetwork.addEventListener('click', () => {
-			if (this.ez_containers[index].style.display != 'none')
+			if (this.containers[index].style.display != 'none')
 				button.dispatchEvent(new Event('click'))
 		})
 
-		const applyStyle = actionColumn.children[3]
+		const applyStyle = actionColumn.children[this.applyBtnIndex]
 		actionColumn.insertBefore(button, applyStyle)
 	}
 
 	main() {
-		for (let i = injectUtil.TXT2IMG; i <= injectUtil.IMG2IMG; i++) {
+		for (let i = injectUtils.TXT2IMG; i <= injectUtils.IMG2IMG; i++) {
 
-			this.toprows[i].after(this.ez_containers[i])
+			this.toprows[i].after(this.containers[i])
 
-			this.ez_containers[i].style.borderStyle = 'none'
-			this.ez_containers[i].style.display = 'none'
+			this.containers[i].style.borderStyle = 'none'
+			this.containers[i].style.display = 'none'
 
-			this.refresh_btns[i].addEventListener('click', () => {
-				setTimeout(this.pollCollection, 250)
-			})
+			this.refresh_btns[i].addEventListener('click', () => { this.pollCollection(0) })
 
 			this.to_negatives[i].classList.remove('block')
 
@@ -150,8 +163,8 @@
 			this.refresh_btns[i].style.marginRight = 0
 
 
-			this.tabs[i].appendChild(this.refresh_btns[i])
-			this.tabs[i].appendChild(this.to_negatives[i])
+			this.tabNavs[i].appendChild(this.refresh_btns[i])
+			this.tabNavs[i].appendChild(this.to_negatives[i])
 
 			this.tabRows[i].forEach((tab) => {
 				let buttons = tab.querySelectorAll("button")

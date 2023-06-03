@@ -22,11 +22,19 @@ class EasyTags(scripts.Script):
 
             with gr.Box(elem_id = 'ez-tag-container-txt'):
                 for key in COLLECTION.keys():
+                    if COLLECTION[key] == None:
+                        print('\n\n[Easy Tag Insert]: Category ' + key + ' is Empty!\n\n')
+                        continue
+
                     with gr.Tab(key, elem_id = 'tab-' + key.replace(' ', '-').lower() + '-txt'):
                         tags = COLLECTION[key]
 
                         with gr.Row():
                             for key, value in tags.items():
+                                if value == None:
+                                    print('\n\n[Easy Tag Insert]: Button ' + key + ' is Empty!\n\n')
+                                    continue
+
                                 button = gr.Button(key, elem_id = value)
                                 button.style(size = 'sm', full_width = False)
 
@@ -42,11 +50,17 @@ class EasyTags(scripts.Script):
 
             with gr.Box(elem_id = 'ez-tag-container-img'):
                 for key in COLLECTION.keys():
+                    if COLLECTION[key] == None:
+                        continue
+
                     with gr.Tab(key, elem_id = 'tab-' + key.replace(' ', '-').lower() + '-img'):
                         tags = COLLECTION[key]
 
                         with gr.Row():
                             for key, value in tags.items():
+                                if value == None:
+                                    continue
+
                                 button = gr.Button(key, elem_id = value)
                                 button.style(size = 'sm', full_width = False)
 
