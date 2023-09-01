@@ -3,7 +3,6 @@ This is an Extension for the [Automatic1111 Webui](https://github.com/AUTOMATIC1
 
 ## How to Use
 1. Click the green `🍀` button under **Generate** to open the panel
-    - Hides **Extra Networks** panel automatically to avoid clutters
 2. Select between category tabs
 3. Click the button to insert the tag; Click the button again to remove the tag
     - Toggle `To Negative` to insert the tag to the Negative Prompt instead
@@ -54,6 +53,3 @@ Category:
     - They will still show up in the same tab
 - Some placeholder sample files are provided
     - If no `tags` folder is present, it will automatically rename the `samples` folder to `tags`. This is to avoid overriding users' local files.
-
-## Special Thanks
-This Extension was inspired by [Easy Prompt Selector](https://github.com/blue-pen5805/sdweb-easy-prompt-selector)~

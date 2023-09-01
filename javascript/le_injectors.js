@@ -12,7 +12,6 @@
 		this.dummy = document.getElementById('ez-tag-textbox').querySelector('textarea')
 
 		this.extraBtnCount = 1
-		this.applyBtnIndex = 3
 	}
 
 	injectButton(button, index) {
@@ -118,7 +117,6 @@
 		const mode = injectUtils.Modes[index]
 
 		const button = document.getElementById('ez-tag-toggle-' + mode)
-		const extraNetwork = document.getElementById(mode + '2img_extra_networks')
 		const actionColumn = document.getElementById(mode + '2img_tools').querySelector('.form')
 
 		button.removeAttribute('id')
@@ -126,20 +124,11 @@
 		button.classList.add('tool')
 
 		button.addEventListener('click', () => {
-			if (extraNetwork.classList.contains('secondary-down'))
-				extraNetwork.dispatchEvent(new Event('click'))
-
 			this.isOns[index] = !this.isOns[index]
 			this.containers[index].style.display = this.isOns[index] ? 'block' : 'none'
 		})
 
-		extraNetwork.addEventListener('click', () => {
-			if (this.containers[index].style.display != 'none')
-				button.dispatchEvent(new Event('click'))
-		})
-
-		const applyStyle = actionColumn.children[this.applyBtnIndex]
-		actionColumn.insertBefore(button, applyStyle)
+		actionColumn.append(button)
 	}
 
 	main() {
