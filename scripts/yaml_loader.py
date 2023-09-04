@@ -24,7 +24,7 @@ def reload_yaml():
 
     for FILE in os.listdir(TAGS_FOLDER):
         if '.yml' not in FILE and '.yaml' not in FILE:
-            print('Non-YAML File: ' + FILE + ' Found in Tags Folder')
+            print('Non-YAML File: "' + FILE + '" Found in Tags Folder')
             continue
 
         with open(TAGS_FOLDER.joinpath(FILE)) as stream:

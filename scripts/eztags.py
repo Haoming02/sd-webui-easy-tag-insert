@@ -1,7 +1,7 @@
 ﻿import modules.scripts as scripts
 import gradio as gr
 
-from yaml_loader import reload_yaml
+from scripts.yaml_loader import reload_yaml
 
 class EasyTags(scripts.Script):
 
@@ -35,13 +35,11 @@ class EasyTags(scripts.Script):
                                     print('\n\n[Easy Tag Insert]: Button ' + key + ' is Empty!\n\n')
                                     continue
 
-                                button = gr.Button(key, elem_id = value)
-                                button.style(size = 'sm', full_width = False)
+                                button = gr.Button(key, elem_id = value, size = 'sm', scale=0)
 
                 with gr.Row():
-                    refresh_btn = gr.Button('Refresh', elem_id = 'ez-tag-refresh-txt')
+                    refresh_btn = gr.Button('Refresh', elem_id = 'ez-tag-refresh-txt', scale=0)
                     refresh_btn.click(fn=reload_yaml, outputs=DUMMY)
-                    refresh_btn.style(full_width = False)
 
                     to_negative = gr.Checkbox(label = ' To Negative ', elem_id = 'ez-tag-negative-txt')
 
@@ -61,13 +59,11 @@ class EasyTags(scripts.Script):
                                 if value == None:
                                     continue
 
-                                button = gr.Button(key, elem_id = value)
-                                button.style(size = 'sm', full_width = False)
+                                button = gr.Button(key, elem_id = value, size = 'sm', scale=0)
 
                 with gr.Row():
-                    refresh_btn = gr.Button('Refresh', elem_id = 'ez-tag-refresh-img')
+                    refresh_btn = gr.Button('Refresh', elem_id = 'ez-tag-refresh-img', scale=0)
                     refresh_btn.click(fn=reload_yaml, outputs=DUMMY)
-                    refresh_btn.style(full_width = False)
 
                     to_negative = gr.Checkbox(label = ' To Negative ', elem_id = 'ez-tag-negative-img')
 

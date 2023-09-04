@@ -151,6 +151,7 @@
 			this.refresh_btns[i].style.marginLeft = 'auto'
 			this.refresh_btns[i].style.marginRight = 0
 
+			this.to_negatives[i].style.borderStyle = 'none'
 
 			this.tabNavs[i].appendChild(this.refresh_btns[i])
 			this.tabNavs[i].appendChild(this.to_negatives[i])
