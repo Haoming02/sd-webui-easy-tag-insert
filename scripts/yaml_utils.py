@@ -3,8 +3,10 @@ import modules.scripts as scripts
 import ruamel.yaml as yaml
 import os
 
-SAMP_FOLDER = Path(scripts.basedir()).joinpath('samples')
+SAMPLE_FOLDER = Path(scripts.basedir()).joinpath('samples')
 TAGS_FOLDER = Path(scripts.basedir()).joinpath('tags')
+
+TAGS = {}
 
 def merge_dictionary(dict1, dict2):
     DICT = dict1.copy()
@@ -18,16 +20,15 @@ def merge_dictionary(dict1, dict2):
 def reload_yaml():
     if not os.path.exists(TAGS_FOLDER):
         print('\n[Easy Tag Insert]: Folder "tags" not found. Initializing...\n')
-        os.rename(SAMP_FOLDER, TAGS_FOLDER)
+        os.rename(SAMPLE_FOLDER, TAGS_FOLDER)
 
-    COLLECTION = {}
+    global TAGS
+    TAGS = {}
 
     for FILE in os.listdir(TAGS_FOLDER):
         if '.yml' not in FILE and '.yaml' not in FILE:
-            print('Non-YAML File: "' + FILE + '" Found in Tags Folder')
+            print(f'Non-YAML File: "{FILE}" Found in Tags Folder')
             continue
 
         with open(TAGS_FOLDER.joinpath(FILE)) as stream:
-            COLLECTION = merge_dictionary(COLLECTION, yaml.safe_load(stream))
-
-    return COLLECTION
+            TAGS = merge_dictionary(TAGS, yaml.safe_load(stream))

@@ -1,70 +1,114 @@
-﻿import modules.scripts as scripts
-import gradio as gr
+﻿from modules import shared, ui_extra_networks, script_callbacks
+from modules.ui_extra_networks import quote_js
 
-from scripts.yaml_loader import reload_yaml
+import scripts.yaml_utils as yaml_utils
 
-class EasyTags(scripts.Script):
+import html
 
-    def title(self):
-        return "Easy Tag Insert"
+class EasyTags(ui_extra_networks.ExtraNetworksPage):
 
-    def show(self, is_img2img):
-        return scripts.AlwaysVisible
+# ========== LOADING STUFFS ==========
 
-    def ui(self, is_img2img):
-        global DUMMY
-        DUMMY = gr.Textbox(interactive=False, visible=False, elem_id = 'ez-tag-textbox') if not is_img2img else DUMMY
+    def __init__(self):
+        super().__init__('Easy Tag Insert')
 
-        COLLECTION = reload_yaml()
+    def refresh(self):
+        yaml_utils.reload_yaml()
 
-        if not is_img2img:
-            enable_btn = gr.Button('🍀', elem_id = 'ez-tag-toggle-txt', full_width = False)
+    def create_item(self, category, index, name):
+        return {
+            "name": index,
+            "prompt": name,
+            "sort_keys": {'default': category.lower(), 'name': index.lower()},
+            "search_term": category,
+        }
 
-            with gr.Box(elem_id = 'ez-tag-container-txt'):
-                for key in COLLECTION.keys():
-                    if COLLECTION[key] == None:
-                        print('\n\n[Easy Tag Insert]: Category ' + key + ' is Empty!\n\n')
-                        continue
+    def list_items(self):
+        for category, content in yaml_utils.TAGS.items():
+            for key, value in content.items():
+                yield self.create_item(category, key, value)
 
-                    with gr.Tab(key, elem_id = 'tab-' + key.replace(' ', '-').lower() + '-txt'):
-                        tags = COLLECTION[key]
+    def allowed_directories_for_previews(self):
+        return list(yaml_utils.TAGS.keys())
 
-                        with gr.Row():
-                            for key, value in tags.items():
-                                if value == None:
-                                    print('\n\n[Easy Tag Insert]: Button ' + key + ' is Empty!\n\n')
-                                    continue
+# ========== LOADING STUFFS ==========
 
-                                button = gr.Button(key, elem_id = value, size = 'sm', scale=0)
+# ========== HTML STUFFS ==========
 
-                with gr.Row():
-                    refresh_btn = gr.Button('Refresh', elem_id = 'ez-tag-refresh-txt', scale=0)
-                    refresh_btn.click(fn=reload_yaml, outputs=DUMMY)
+    def create_html_for_item(self, item, tabname):
+        """Create HTML for Card Item"""
 
-                    to_negative = gr.Checkbox(label = ' To Negative ', elem_id = 'ez-tag-negative-txt')
+        height = "height: 3em;"
+        width = "width: 12em;"
 
-        else:
-            enable_btn = gr.Button('🍀', elem_id = 'ez-tag-toggle-img', full_width = False)
+        onclick = '"' + html.escape(f"""return cardClicked({quote_js(tabname)}, {quote_js(item["prompt"].strip())}, "true")""") + '"'
 
-            with gr.Box(elem_id = 'ez-tag-container-img'):
-                for key in COLLECTION.keys():
-                    if COLLECTION[key] == None:
-                        continue
+        sort_keys = " ".join([html.escape(f'data-sort-{k}={v}') for k, v in item.get("sort_keys", {}).items()]).strip()
 
-                    with gr.Tab(key, elem_id = 'tab-' + key.replace(' ', '-').lower() + '-img'):
-                        tags = COLLECTION[key]
+        metadata_button = f"<div class='metadata-button card-button' title='Show Prompt' onclick='(function() {{ extraNetworksShowMetadata({quote_js(item['prompt'].strip())}); event.stopPropagation(); }}) ();'></div>"
 
-                        with gr.Row():
-                            for key, value in tags.items():
-                                if value == None:
-                                    continue
+        args = {
+            "background_image": "",
+            "style": f"'display: none; {height}{width}; background-image: linear-gradient(90deg, var(--button-secondary-background-fill), var(--button-primary-background-fill)); font-size: 100%'",
+            "prompt": item.get("prompt", None),
+            "tabname": quote_js(tabname),
+            "local_preview": "",
+            "name": html.escape(item["name"]),
+            "description": "",
+            "card_clicked": onclick,
+            "save_card_preview": "",
+            "search_term": item.get("search_term", ""),
+            "metadata_button": metadata_button,
+            "edit_button": "",
+            "search_only": "",
+            "sort_keys": sort_keys,
+        }
 
-                                button = gr.Button(key, elem_id = value, size = 'sm', scale=0)
+        return self.card_page.format(**args)
 
-                with gr.Row():
-                    refresh_btn = gr.Button('Refresh', elem_id = 'ez-tag-refresh-img', scale=0)
-                    refresh_btn.click(fn=reload_yaml, outputs=DUMMY)
+    def create_html(self, tabname):
+        items_html = ''
 
-                    to_negative = gr.Checkbox(label = ' To Negative ', elem_id = 'ez-tag-negative-img')
+        subdirs = {}
+        for cat in self.allowed_directories_for_previews():
+            subdirs[cat] = 1
 
-        return None
+        if subdirs:
+            subdirs = {"": 1, **subdirs}
+
+        subdirs_html =  "".join([f"""
+                        <button class='lg secondary gradio-button custom-button{" search-all" if subdir=="" else ""}' onclick='extraNetworksSearchButton("{tabname}_extra_search", event)'>
+                        {html.escape(subdir if subdir!="" else "all")}
+                        </button>""" for subdir in subdirs])
+
+        self.items = {x["name"]: x for x in self.list_items()}
+
+        for item in self.items.values():
+            items_html += self.create_html_for_item(item, tabname)
+
+        if items_html == '':
+            dirs = "".join([f"<li>{x}</li>" for x in self.allowed_directories_for_previews()])
+            items_html = shared.html("extra-networks-no-cards.html").format(dirs=dirs)
+
+        self_name_id = self.name.replace(" ", "_")
+
+        res =   f"""
+                <div id='{tabname}_{self_name_id}_subdirs' class='extra-network-subdirs extra-network-subdirs-cards'>
+                    {subdirs_html}
+                </div>
+                <div id='{tabname}_{self_name_id}_cards' class='extra-network-cards'>
+                    {items_html}
+                </div>
+                """
+
+        return res
+
+# ========== HTML STUFFS ==========
+
+# ========== REGISTER CALLBACK ==========
+def registerTab():
+    yaml_utils.reload_yaml()
+    ui_extra_networks.register_page(EasyTags())
+
+script_callbacks.on_before_ui(registerTab)
+# ========== REGISTER CALLBACK ==========
