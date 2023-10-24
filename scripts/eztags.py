@@ -1,40 +1,43 @@
 ﻿from modules import shared, ui_extra_networks, script_callbacks
 from modules.ui_extra_networks import quote_js
-
 import scripts.yaml_utils as yaml_utils
-
 import html
 
 class EasyTags(ui_extra_networks.ExtraNetworksPage):
 
 # ========== LOADING STUFFS ==========
-
     def __init__(self):
-        super().__init__('Easy Tag Insert')
+        super().__init__('EZ Tags')
 
     def refresh(self):
         yaml_utils.reload_yaml()
 
-    def create_item(self, category, index, name):
+    def create_item(self, category, index, name, i):
         return {
             "name": index,
             "prompt": name,
-            "sort_keys": {'default': category.lower(), 'name': index.lower()},
+            "sort_keys": {
+                'default': yaml_utils.sanitize(f'{category.lower()}-{index.lower()}'),
+                "date_created": i,
+                "date_modified": yaml_utils.sanitize(f'{category.lower()}-{i}'),
+                'name': yaml_utils.sanitize(index.lower()),
+            },
             "search_term": category,
         }
 
     def list_items(self):
+        i = 0
         for category, content in yaml_utils.TAGS.items():
             for key, value in content.items():
-                yield self.create_item(category, key, value)
+                i += 1
+                yield self.create_item(category, key, value, yaml_utils.sanitize_int(i))
 
     def allowed_directories_for_previews(self):
         return list(yaml_utils.TAGS.keys())
-
 # ========== LOADING STUFFS ==========
 
-# ========== HTML STUFFS ==========
 
+# ========== HTML STUFFS ==========
     def create_html_for_item(self, item, tabname):
         """Create HTML for Card Item"""
 
@@ -102,8 +105,8 @@ class EasyTags(ui_extra_networks.ExtraNetworksPage):
                 """
 
         return res
-
 # ========== HTML STUFFS ==========
+
 
 # ========== REGISTER CALLBACK ==========
 def registerTab():

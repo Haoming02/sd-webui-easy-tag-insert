@@ -2,11 +2,18 @@ from pathlib import Path
 import modules.scripts as scripts
 import ruamel.yaml as yaml
 import os
+import re
 
 SAMPLE_FOLDER = Path(scripts.basedir()).joinpath('samples')
 TAGS_FOLDER = Path(scripts.basedir()).joinpath('tags')
 
 TAGS = {}
+
+def sanitize(item:str):
+    return re.sub('[^a-zA-Z0-9 \.]', '', item).replace(' ', '_')
+
+def sanitize_int(index:int):
+    return f'{index:03}'
 
 def merge_dictionary(dict1, dict2):
     DICT = dict1.copy()

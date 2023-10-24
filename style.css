@@ -1,4 +1,4 @@
-#txt2img_easy_tag_insert_cards_html .name {
+#txt2img_ez_tags_cards_html .name {
     display: inline-flex;
     position: relative;
     align-items: center;
@@ -10,7 +10,7 @@
     white-space: nowrap;
 }
 
-#txt2img_easy_tag_insert_cards_html .actions {
+#txt2img_ez_tags_cards_html .actions {
     background: none;
     box-shadow: none;
     position: inherit;
@@ -18,13 +18,13 @@
     height: 100%;
 }
 
-#txt2img_easy_tag_insert_cards_html .button-row {
+#txt2img_ez_tags_cards_html .button-row {
     right: auto;
     position: relative;
     bottom: -50%;
 }
 
-#txt2img_easy_tag_insert_cards_html .card-button {
+#txt2img_ez_tags_cards_html .card-button {
     height: 1em;
     width: 1em;
     position: absolute;
@@ -33,7 +33,7 @@
     left: 0;
 }
 
-#img2img_easy_tag_insert_cards_html .name {
+#img2img_ez_tags_cards_html .name {
     display: inline-flex;
     position: relative;
     align-items: center;
@@ -45,7 +45,7 @@
     white-space: nowrap;
 }
 
-#img2img_easy_tag_insert_cards_html .actions {
+#img2img_ez_tags_cards_html .actions {
     background: none;
     box-shadow: none;
     position: inherit;
@@ -53,13 +53,13 @@
     height: 100%;
 }
 
-#img2img_easy_tag_insert_cards_html .button-row {
+#img2img_ez_tags_cards_html .button-row {
     right: auto;
     position: relative;
     bottom: -50%;
 }
 
-#img2img_easy_tag_insert_cards_html .card-button {
+#img2img_ez_tags_cards_html .card-button {
     height: 1em;
     width: 1em;
     position: absolute;
