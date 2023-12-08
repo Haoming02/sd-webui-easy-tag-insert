@@ -1,6 +1,6 @@
 from pathlib import Path
 import modules.scripts as scripts
-import ruamel.yaml as yaml
+import yaml
 import os
 import re
 
