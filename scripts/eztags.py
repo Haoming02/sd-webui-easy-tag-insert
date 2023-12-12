@@ -14,15 +14,15 @@ class EasyTags(ui_extra_networks.ExtraNetworksPage):
 
     def create_item(self, category, index, name, i):
         return {
-            "name": index,
-            "prompt": name,
+            "name": index.strip(),
+            "prompt": name.strip(),
             "sort_keys": {
                 'default': yaml_utils.sanitize(f'{category.lower()}-{index.lower()}'),
                 "date_created": i,
                 "date_modified": yaml_utils.sanitize(f'{category.lower()}-{i}'),
                 'name': yaml_utils.sanitize(index.lower()),
             },
-            "search_term": category,
+            "search_term": category.strip(),
         }
 
     def list_items(self):
@@ -44,11 +44,11 @@ class EasyTags(ui_extra_networks.ExtraNetworksPage):
         height = "height: 3em;"
         width = "width: 12em;"
 
-        onclick = '"' + html.escape(f"""return cardClicked({quote_js(tabname)}, {quote_js(item["prompt"].strip())}, "true")""") + '"'
+        onclick = '"' + html.escape(f"""return cardClicked({quote_js(tabname)}, {quote_js(item["prompt"])}, "true")""") + '"'
 
         sort_keys = " ".join([html.escape(f'data-sort-{k}={v}') for k, v in item.get("sort_keys", {}).items()]).strip()
 
-        metadata_button = f"<div class='metadata-button card-button' title='Show Prompt' onclick='(function() {{ extraNetworksShowMetadata({quote_js(item['prompt'].strip())}); event.stopPropagation(); }}) ();'></div>"
+        metadata_button = f"<div class='metadata-button card-button' title='Show Prompt' onclick='(function() {{ extraNetworksShowMetadata({quote_js(item['prompt'])}); event.stopPropagation(); }}) ();'></div>"
 
         args = {
             "background_image": "",
