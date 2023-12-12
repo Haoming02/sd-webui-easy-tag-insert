@@ -4,12 +4,12 @@ This is an Extension for the [Automatic1111 Webui](https://github.com/AUTOMATIC1
 **Note:** This Extension has been rewritten for the new `v1.6.0` UIs. For Webui `v1.5` or older, please download the one from the **Release** page. 
 
 <p align="center">
-<img src="sample.jpg" width=768><br>
+<img src="sample.jpg"><br>
 <i>(<a href="https://github.com/catppuccin/stable-diffusion-webui">Catppuccin Theme</a>)</i>
 </p>
 
 ## How to Use 
-This Extension creates buttons in a new `Extra Networks Tabs`, **EZ Tags**. 
+This Extension creates buttons in a new `Extra Networks` tab, **EZ Tags**. 
 When clicked, it will add the specified prompts into either the Positive or Negative field.
 
 ## Use Cases
@@ -27,7 +27,7 @@ Character:
   Chara2: triggers2, <lora:franchise:0.75>
 ```
 
-## How to Add Entry
+## How to Add Entries
 The tags are loaded from the `.yml` files inside the `tags` folder. To add your own entry, write in the following format:
 ```yml
 Category:
