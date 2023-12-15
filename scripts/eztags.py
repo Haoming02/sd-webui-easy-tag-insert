@@ -10,7 +10,10 @@ class EasyTags(ui_extra_networks.ExtraNetworksPage):
         super().__init__('EZ Tags')
 
     def refresh(self):
-        yaml_utils.reload_yaml()
+        logs = yaml_utils.reload_yaml()
+        if len(logs) > 0:
+            print('\n[Easy Tag Insert]:')
+            print('\n'.join(logs) + "\n")
 
     def create_item(self, category, index, name, i):
         return {
@@ -110,7 +113,6 @@ class EasyTags(ui_extra_networks.ExtraNetworksPage):
 
 # ========== REGISTER CALLBACK ==========
 def registerTab():
-    yaml_utils.reload_yaml()
     ui_extra_networks.register_page(EasyTags())
 
 script_callbacks.on_before_ui(registerTab)

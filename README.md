@@ -10,7 +10,7 @@ This is an Extension for the [Automatic1111 Webui](https://github.com/AUTOMATIC1
 
 ## How to Use 
 This Extension creates buttons in a new `Extra Networks` tab, **EZ Tags**. 
-When clicked, it will add the specified prompts into either the Positive or Negative field.
+When clicked, it will add the specified string into either the Positive or Negative prompt field.
 
 ## Use Cases
 You can use this Extension to simply make shortcuts for very long prompts:
@@ -42,11 +42,14 @@ Category:
 - The `Show dirs` toggle displays the Categories for filtering
 - You can have multiple `.yml` *(or `.yaml`)* files in the `tags` folder for better organizations
 - You can also have the same Category in multiple files
-- You can live reload the entries by pressing `Refresh` without restarting the UI
-- Due to how the Webui is coded, the buttons are sorted like **Date Created** on launch
+- You can live reload the entries by pressing **Refresh** without restarting the UI
+  > To avoid race condition, **Refresh** can only be triggered once per second
+- **New:** Nested categories are now supported
 
 ## Sorting
 - **Default Sort:** First by `Category`, then by `Display Name`
 - **Date Created:** By `Index` *(the order they are written in the YAML)*
 - **Date Modified:** First by `Category`, then by `Index`
 - **Name:** By `Display Name`
+
+> Due to how the Webui is coded, the buttons are sorted like **Date Created** on launch
