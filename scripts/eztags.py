@@ -1,119 +1,96 @@
-﻿from modules import shared, ui_extra_networks, script_callbacks
+﻿from modules import ui_extra_networks, shared, script_callbacks
 from modules.ui_extra_networks import quote_js
 import scripts.yaml_utils as yaml_utils
-import html
+import modules.scripts as scripts
+import shutil
+import os
+
+
+TEMP_FOLDER = os.path.join(scripts.basedir(), 'cards')
+
+def refresh_yaml():
+    logs = yaml_utils.reload_yaml()
+    if len(logs) > 0:
+        print('\n[Easy Tag Insert]:')
+        print('\n'.join(logs) + "\n")
+
 
 class EasyTags(ui_extra_networks.ExtraNetworksPage):
-
 # ========== LOADING STUFFS ==========
+# ~\stable-diffusion-webui-forge\modules\ui_extra_networks_textual_inversion.py
+# ====================================
+
     def __init__(self):
-        super().__init__('EZ Tags')
+        super().__init__('Easy Tags')
+        self.allow_negative_prompt = True
 
     def refresh(self):
-        logs = yaml_utils.reload_yaml()
-        if len(logs) > 0:
-            print('\n[Easy Tag Insert]:')
-            print('\n'.join(logs) + "\n")
+        refresh_yaml()
+        setup_cards()
 
-    def create_item(self, category, index, name, i):
+    def create_item(self, filename:str, i:str):
+        with open(filename, 'r', encoding='utf-8') as F:
+            prompt = F.read().strip()
+
+        path, ext = os.path.splitext(filename)
+
+        category = os.path.basename(path.split('___')[0]).replace('---', '/')
+        name = path.split('___')[1]
+
         return {
-            "name": index.strip(),
-            "prompt": name.strip(),
+            "name": name.strip(),
+            "filename": filename,
+            "shorthash": '.',
+            "preview": self.find_preview(path),
+            "description": self.find_description(path),
+            "search_term": [category.strip(), name.strip()],
+            "prompt": quote_js(prompt),
+            "local_preview": f"{path}.preview.{shared.opts.samples_format}",
             "sort_keys": {
-                'default': yaml_utils.sanitize(f'{category.lower()}-{index.lower()}'),
+                'default': yaml_utils.sanitize(f'{category.lower()}-{name.lower()}'),
                 "date_created": i,
                 "date_modified": yaml_utils.sanitize(f'{category.lower()}-{i}'),
-                'name': yaml_utils.sanitize(index.lower()),
-            },
-            "search_term": category.strip(),
+                'name': yaml_utils.sanitize(name.lower()),
+            }
         }
 
     def list_items(self):
         i = 0
-        for category, content in yaml_utils.TAGS.items():
-            for key, value in content.items():
-                i += 1
-                yield self.create_item(category, key, value, yaml_utils.sanitize_int(i))
+        for FILE in os.listdir(TEMP_FOLDER):
+            i += 1
+            yield self.create_item(os.path.join(TEMP_FOLDER, FILE), yaml_utils.sanitize_int(i))
 
     def allowed_directories_for_previews(self):
-        return list(yaml_utils.TAGS.keys())
+        return [TEMP_FOLDER]
 # ========== LOADING STUFFS ==========
-
-
-# ========== HTML STUFFS ==========
-    def create_html_for_item(self, item, tabname):
-        """Create HTML for Card Item"""
-
-        height = "height: 3em;"
-        width = "width: 12em;"
-
-        onclick = '"' + html.escape(f"""return cardClicked({quote_js(tabname)}, {quote_js(item["prompt"])}, "true")""") + '"'
-
-        sort_keys = " ".join([html.escape(f'data-sort-{k}={v}') for k, v in item.get("sort_keys", {}).items()]).strip()
-
-        metadata_button = f"<div class='metadata-button card-button' title='Show Prompt' onclick='(function() {{ extraNetworksShowMetadata({quote_js(item['prompt'])}); event.stopPropagation(); }}) ();'></div>"
-
-        args = {
-            "background_image": "",
-            "style": f"'display: none; {height}{width}; background-image: linear-gradient(90deg, var(--button-secondary-background-fill), var(--button-primary-background-fill)); font-size: 100%'",
-            "prompt": item.get("prompt", None),
-            "tabname": quote_js(tabname),
-            "local_preview": "",
-            "name": html.escape(item["name"]),
-            "description": "",
-            "card_clicked": onclick,
-            "save_card_preview": "",
-            "search_term": item.get("search_term", ""),
-            "metadata_button": metadata_button,
-            "edit_button": "",
-            "search_only": "",
-            "sort_keys": sort_keys,
-        }
-
-        return self.card_page.format(**args)
-
-    def create_html(self, tabname):
-        items_html = ''
-
-        subdirs = {}
-        for cat in self.allowed_directories_for_previews():
-            subdirs[cat] = 1
-
-        if subdirs:
-            subdirs = {"": 1, **subdirs}
-
-        subdirs_html =  "".join([f"""
-                        <button class='lg secondary gradio-button custom-button{" search-all" if subdir=="" else ""}' onclick='extraNetworksSearchButton("{tabname}_extra_search", event)'>
-                        {html.escape(subdir if subdir!="" else "all")}
-                        </button>""" for subdir in subdirs])
-
-        self.items = {x["name"]: x for x in self.list_items()}
-
-        for item in self.items.values():
-            items_html += self.create_html_for_item(item, tabname)
-
-        if items_html == '':
-            dirs = "".join([f"<li>{x}</li>" for x in self.allowed_directories_for_previews()])
-            items_html = shared.html("extra-networks-no-cards.html").format(dirs=dirs)
-
-        self_name_id = self.name.replace(" ", "_")
-
-        res =   f"""
-                <div id='{tabname}_{self_name_id}_subdirs' class='extra-network-subdirs extra-network-subdirs-cards'>
-                    {subdirs_html}
-                </div>
-                <div id='{tabname}_{self_name_id}_cards' class='extra-network-cards'>
-                    {items_html}
-                </div>
-                """
-
-        return res
-# ========== HTML STUFFS ==========
 
 
 # ========== REGISTER CALLBACK ==========
 def registerTab():
+    refresh_yaml()
+    setup_cards()
     ui_extra_networks.register_page(EasyTags())
 
 script_callbacks.on_before_ui(registerTab)
 # ========== REGISTER CALLBACK ==========
+
+
+# ========== TEMP CARDS ==========
+def setup_cards():
+    if os.path.exists(TEMP_FOLDER):
+        shutil.rmtree(TEMP_FOLDER)
+    os.makedirs(TEMP_FOLDER)
+
+    for category, content in yaml_utils.TAGS.items():
+        for key, value in content.items():
+
+            FILENAME = f"{category.replace('/', '---')}___{key}.tag"
+            with open(f'{os.path.join(TEMP_FOLDER, FILENAME)}', 'w') as F:
+                F.write(value)
+
+def clear_cards():
+    if os.path.exists(TEMP_FOLDER):
+        shutil.rmtree(TEMP_FOLDER)
+
+script_callbacks.on_script_unloaded(clear_cards)
+# ========== TEMP CARDS ==========
