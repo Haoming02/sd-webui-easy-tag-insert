@@ -21,7 +21,7 @@ class EasyTags(ui_extra_networks.ExtraNetworksPage):
 # ====================================
 
     def __init__(self):
-        super().__init__('Easy Tags')
+        super().__init__('EZ Tags')
         self.allow_negative_prompt = True
 
     def refresh(self):

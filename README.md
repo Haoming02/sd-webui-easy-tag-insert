@@ -1,12 +1,7 @@
 ﻿# SD Webui Easy Tag Insert
-This is an Extension for the [Automatic1111 Webui](https://github.com/AUTOMATIC1111/stable-diffusion-webui), which trivializes inserting prompts.
+This is an Extension for the [SD Webui Forge](https://github.com/lllyasviel/stable-diffusion-webui-forge), which trivializes inserting prompts.
 
-**Note:** This Extension has been rewritten for the new `v1.6.0` UIs. For Webui `v1.5` or older, please download the one from the **Release** page. 
-
-<p align="center">
-<img src="sample.jpg"><br>
-<i>(<a href="https://github.com/catppuccin/stable-diffusion-webui">Catppuccin Theme</a>)</i>
-</p>
+**Status:** Waiting for https://github.com/lllyasviel/stable-diffusion-webui-forge/issues/276
 
 ## How to Use 
 This Extension creates buttons in a new `Extra Networks` tab, **EZ Tags**. 
