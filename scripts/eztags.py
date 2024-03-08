@@ -72,7 +72,7 @@ class EasyTags(ui_extra_networks.ExtraNetworksPage):
 
         return self.card_page.format(**args)
 
-    def create_html(self, tabname):
+    def create_html(self, tabname, *, empty=False):
         items_html = ''
 
         subdirs = {}
@@ -87,7 +87,8 @@ class EasyTags(ui_extra_networks.ExtraNetworksPage):
                         {html.escape(subdir if subdir!="" else "all")}
                         </button>""" for subdir in subdirs])
 
-        self.items = {x["name"]: x for x in self.list_items()}
+        items_list = [] if empty else self.list_items()
+        self.items = {x["name"]: x for x in items_list}
 
         for item in self.items.values():
             items_html += self.create_html_for_item(item, tabname)
