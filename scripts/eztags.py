@@ -8,24 +8,34 @@ import os
 
 TEMP_FOLDER = os.path.join(scripts.basedir(), 'cards')
 
-def refresh_yaml():
-    logs = yaml_utils.reload_yaml()
-    if len(logs) > 0:
-        print('\n[Easy Tag Insert]:')
-        print('\n'.join(logs) + "\n")
+
+# ========== TEMP CARDS ==========
+def setup_cards():
+    if os.path.exists(TEMP_FOLDER):
+        shutil.rmtree(TEMP_FOLDER)
+    os.makedirs(TEMP_FOLDER)
+
+    for category, content in yaml_utils.TAGS.items():
+        for key, value in content.items():
+
+            FILENAME = f"{category.replace('/', '---')}___{key}.tag"
+            with open(f'{os.path.join(TEMP_FOLDER, FILENAME)}', 'w') as F:
+                F.write(value)
+# ========== TEMP CARDS ==========
 
 
 class EasyTags(ui_extra_networks.ExtraNetworksPage):
-# ========== LOADING STUFFS ==========
-# ~\stable-diffusion-webui-forge\modules\ui_extra_networks_textual_inversion.py
-# ====================================
 
     def __init__(self):
         super().__init__('EZ Tags')
         self.allow_negative_prompt = True
 
     def refresh(self):
-        refresh_yaml()
+        logs = yaml_utils.reload_yaml()
+        if logs:
+            print('\n[Easy Tag Insert]:')
+            print('\n'.join(logs) + "\n")
+
         setup_cards()
 
     def create_item(self, filename:str, i:str):
@@ -67,30 +77,11 @@ class EasyTags(ui_extra_networks.ExtraNetworksPage):
 
 # ========== REGISTER CALLBACK ==========
 def registerTab():
-    refresh_yaml()
-    setup_cards()
+    if not os.path.exists(os.path.join(scripts.basedir(), 'tags')):
+        yaml_utils.reload_yaml()
+        setup_cards()
+
     ui_extra_networks.register_page(EasyTags())
 
 script_callbacks.on_before_ui(registerTab)
 # ========== REGISTER CALLBACK ==========
-
-
-# ========== TEMP CARDS ==========
-def setup_cards():
-    if os.path.exists(TEMP_FOLDER):
-        shutil.rmtree(TEMP_FOLDER)
-    os.makedirs(TEMP_FOLDER)
-
-    for category, content in yaml_utils.TAGS.items():
-        for key, value in content.items():
-
-            FILENAME = f"{category.replace('/', '---')}___{key}.tag"
-            with open(f'{os.path.join(TEMP_FOLDER, FILENAME)}', 'w') as F:
-                F.write(value)
-
-def clear_cards():
-    if os.path.exists(TEMP_FOLDER):
-        shutil.rmtree(TEMP_FOLDER)
-
-script_callbacks.on_script_unloaded(clear_cards)
-# ========== TEMP CARDS ==========

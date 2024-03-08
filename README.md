@@ -1,8 +1,6 @@
 ﻿# SD Webui Easy Tag Insert
 This is an Extension for the [SD Webui Forge](https://github.com/lllyasviel/stable-diffusion-webui-forge), which trivializes inserting prompts.
 
-**Status:** Waiting for https://github.com/lllyasviel/stable-diffusion-webui-forge/issues/276
-
 ## How to Use 
 This Extension creates buttons in a new `Extra Networks` tab, **EZ Tags**. 
 When clicked, it will add the specified string into either the Positive or Negative prompt field.
