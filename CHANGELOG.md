@@ -1,3 +1,6 @@
+#### v1.3.0 - 2024 Mar.09
+- Support new **Tree View** *(**v1.8.0** and **Forge**)*
+
 #### v1.2.1 - 2023 Oct.24
 - Improved **Sorting**
 
