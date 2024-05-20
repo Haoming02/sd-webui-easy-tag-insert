@@ -1,59 +1,50 @@
 ﻿# SD Webui Easy Tag Insert
 This is an Extension for the [Automatic1111 Webui](https://github.com/AUTOMATIC1111/stable-diffusion-webui), which trivializes inserting prompts.
 
-> Also compatible with [Forge](https://github.com/lllyasviel/stable-diffusion-webui-forge)!
+> Compatible with [Forge](https://github.com/lllyasviel/stable-diffusion-webui-forge)~
 
 <p align="center">
 <img src="sample.jpg"><br>
 <i>(<a href="https://github.com/catppuccin/stable-diffusion-webui">Catppuccin Theme</a>)</i>
 </p>
 
-## Notice
-This Extension has been updated to work for the latest version of the Webui. 
-If you're using an older version, please check out [Releases](https://github.com/Haoming02/sd-webui-easy-tag-insert/releases).
+> This Extension has been updated to work for the latest version of the Webui.
+If you're using an older version, please refer to [Releases](https://github.com/Haoming02/sd-webui-easy-tag-insert/releases).
 
-## How to Use 
-This Extension creates buttons in a new `Extra Networks` tab, **EZ Tags**. 
-When clicked, it will add the specified string into either the Positive or Negative prompt field.
+## How to Use
+This Extension creates buttons in a new `Extra Networks` tab, **EZ Tags**.
+When clicked, it will add the specified string into the prompt field.
 
 ## Use Cases
 You can use this Extension to simply make shortcuts for very long prompts:
-```yml
-Starting Prompts:
+```yaml
   Positive: (high quality, best quality)
   Negative: (low quality, worst quality:1.2)
 ```
 
-This is really useful with LoRAs, especially for those that contain multiple concepts with different **trigger words**.
-```yml
-Character:
-  Chara1: triggers1, <lora:franchise:0.75>
-  Chara2: triggers2, <lora:franchise:0.75>
+This is especially useful with LoRAs, such as those that contain multiple concepts using different **trigger words**:
+```yaml
+  Chara1: trigger1, <lora:franchise:0.75>
+  Chara2: trigger2, <lora:franchise:0.75>
 ```
 
-## How to Add Entries
-The tags are loaded from the `.yml` files inside the `tags` folder. To add your own entry, write in the following format:
-```yml
-Category:
-  Display Name: Actual Prompts
-```
+## How to Edit Entries
+The tags are loaded from the `.tag` files inside the `cards` folder. You may edit the entries by modifying the table in the **EZ Tags Editor** tab:
 
-> Those are `2 spaces` at the beginning of each entry, as specified by YAML
-
-## Note
-- If no `tags` folder is present *(**eg.** fresh install)*, it will automatically clone the `samples` folder to `tags`. This is to avoid overriding users' local files.
-- An example `.yml` file is also provided
-- The `Show dirs` toggle displays the Categories for filtering
-- You can have multiple `.yml` files in the `tags` folder for better organizations
-- You can also have the same Category in multiple files
-- You can live reload the entries by pressing **Refresh** without restarting the UI
-  > To avoid race condition, **Refresh** can only be triggered once per second
-- Nested categories are also supported
+- Press the **Load** button to load the tags into the table
+  - **folder**: The path used to filter/categorize
+  - **filename**: The displayed name of the buttons
+  - **prompt**: The strings to add to the field
+- Press the **Save** button to save the tags into the `cards` folder
+  - Rows with any column empty will be skipped
+  - Empty folder will be deleted afterwards
+- If no `cards` folder is present (**eg.** fresh install), it will automatically copy the `samples` folder to `cards`
+- You can live reload the entries after editing by pressing the **Refresh** button, without restarting the UI
 
 ## Sorting
-- **Default Sort:** First by `Category`, then by `Display Name`
-- **Date Created:** By `Index` *(the order they are written in the YAML)*
-- **Date Modified:** First by `Category`, then by `Index`
-- **Name:** By `Display Name`
+You can toggle the sorting between multiple modes:
 
-> Due to how the Webui is coded, the buttons are sorted like **Date Created** on launch
+- First by `Category`, then by `Display Name`
+- By `Index` *(the order they are loaded in)*
+- First by `Category`, then by `Index`
+- By `Display Name`
