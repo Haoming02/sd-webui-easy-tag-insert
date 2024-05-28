@@ -1,7 +1,7 @@
 ﻿from modules.ui_extra_networks import ExtraNetworksPage, quote_js, register_page
 from modules import shared, script_callbacks
 
-from scripts.utils import (
+from scripts.ez_utils import (
     SAMPLE_FOLDER,
     CARDS_FOLDER,
     TAGS_FOLDER,

@@ -1,5 +1,5 @@
 ﻿from modules import script_callbacks
-from scripts.utils import CARDS_FOLDER
+from scripts.ez_utils import CARDS_FOLDER
 
 import gradio as gr
 import glob
