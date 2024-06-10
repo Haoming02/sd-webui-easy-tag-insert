@@ -1,5 +1,8 @@
+#### v1.4.0 - 2024 May.20
+- Load from files directly without YAML
+
 #### v1.3.0 - 2024 Mar.09
-- Support new **Tree View** *(**v1.8.0** and **Forge**)*
+- Rewrite for Webui **v1.8.0**
 
 #### v1.2.1 - 2023 Oct.24
 - Improved **Sorting**
