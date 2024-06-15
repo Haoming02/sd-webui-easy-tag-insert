@@ -57,7 +57,11 @@ def save(data: list):
             cards.append(obj)
 
     for category, name, prompt in data:
-        if (not category.strip()) or (not name.strip()) or (not prompt.strip()):
+        category = category.strip()
+        name = name.strip()
+        prompt = prompt.strip()
+
+        if (not category) or (not name) or (not prompt):
             continue
 
         folder = os.path.join(CARDS_FOLDER, category)
@@ -75,7 +79,7 @@ def save(data: list):
     for card in cards:
         os.remove(card)
 
-    for obj in CARDS_FOLDER:
+    for obj in os.listdir(CARDS_FOLDER):
         clean_empty_folders(os.path.join(CARDS_FOLDER, obj))
 
 
