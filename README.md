@@ -48,3 +48,7 @@ You can toggle the sorting between multiple modes:
 - By `Index` *(the order they are loaded in)*
 - First by `Category`, then by `Index`
 - By `Display Name`
+
+## Setting
+You can go to the `EZ Tags` section in the **Settings**, and disable the use of my custom style. This reverts the cards back to the native Webui look *(just like LoRAs, etc)*, thus allowing you to add preview images for the cards in the folder.
+  > Just like other **ExtraNetwork**, add `.preview` to the image filename
