@@ -41,6 +41,10 @@ class EasyTags(ExtraNetworksPage):
                 continue
 
             name = os.path.splitext(filename.rsplit(os.sep, 1)[1])[0]
+
+            if name in self.cards_db:
+                print(f'\n[EZ Tags] Duplicated filename "{name}" was found!\n')
+
             self.cards_db.update({name: [filename, -1]})
 
     def create_item(self, name: str, index: str = None, enable_filter: bool = True):

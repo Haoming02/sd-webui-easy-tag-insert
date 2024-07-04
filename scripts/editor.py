@@ -30,8 +30,6 @@ def load():
 
         if obj.endswith(".tag"):
             cards.append(obj)
-        else:
-            print(f'[EZ Tags] Invalid File: "{obj}"')
 
     for card in cards:
         path, ext = os.path.splitext(card)

@@ -34,6 +34,10 @@
             white-space: nowrap;
         }
 
+        #txt2img_ez_tags_cards_html .card .actions .description {
+            display: none;
+        }
+
 
 #img2img_ez_tags_cards {
     padding: 2em;
@@ -69,4 +73,8 @@
             font-size: 1em;
             overflow: hidden;
             white-space: nowrap;
+        }
+
+        #img2img_ez_tags_cards_html .card .actions .description {
+            display: none;
         }
