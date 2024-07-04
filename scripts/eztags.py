@@ -19,7 +19,7 @@ class EasyTags(ExtraNetworksPage):
     def __init__(self):
         super().__init__("EZ Tags")
         self.allow_negative_prompt = True
-        self.cards: list[str] = None
+        self.cards_db = None
 
         if os.path.exists(TAGS_FOLDER):
             print('\n[EZ Tags] "tags" folder has been deprecated. You may delete it~\n')
@@ -30,40 +30,45 @@ class EasyTags(ExtraNetworksPage):
         self.refresh()
 
     def refresh(self):
-        self.cards = []
+        self.cards_db: dict[str, str] = {}
         objs = glob.glob(os.path.join(CARDS_FOLDER, "**", "*"), recursive=True)
 
-        for obj in objs:
-            if os.path.isdir(obj):
+        for filename in objs:
+            if os.path.isdir(filename):
                 continue
 
-            if obj.endswith(".tag"):
-                self.cards.append(obj)
-            else:
-                print(f'[EZ Tags] Invalid File: "{obj}"')
+            if not filename.endswith(".tag"):
+                continue
 
-    def create_item(self, filename: str, i: str):
+            name = os.path.splitext(filename.rsplit(os.sep, 1)[1])[0]
+            self.cards_db.update({name: [filename, -1]})
+
+    def create_item(self, name: str, index: str = None, enable_filter: bool = True):
+        if index is not None:
+            self.cards_db[name][1] = index
+
+        filename, index = self.cards_db[name]
+
         with open(filename, "r", encoding="utf-8") as card:
             prompt = card.read().strip()
 
         path, ext = os.path.splitext(filename)
         relative_path = os.path.relpath(path, CARDS_FOLDER)
-
-        category, name = relative_path.rsplit(os.sep, 1)
+        category = relative_path.rsplit(os.sep, 1)[0]
 
         return {
             "name": name.strip(),
             "filename": filename,
-            "shorthash": f"{hash(filename)}",
-            "preview": None,
-            "description": None,
+            "shorthash": f"{hash(name)}",
+            "preview": self.find_preview(path),
+            "description": self.find_description(path),
             "search_terms": [self.search_terms_from_path(filename)],
             "prompt": quote_js(prompt),
             "local_preview": f"{path}.preview.{shared.opts.samples_format}",
             "sort_keys": {
                 "default": sanitize(f"{category.lower()}-{name.lower()}"),
-                "date_created": i,
-                "date_modified": sanitize(f"{category.lower()}-{i}"),
+                "date_created": index,
+                "date_modified": sanitize(f"{category.lower()}-{index}"),
                 "name": sanitize(name.lower()),
             },
         }
@@ -71,12 +76,20 @@ class EasyTags(ExtraNetworksPage):
     def list_items(self):
         i = 0
 
-        for FILE in self.cards:
+        for name in self.cards_db.keys():
             i += 1
-            yield self.create_item(FILE, sanitize_int(i))
+            yield self.create_item(name, sanitize_int(i))
 
     def allowed_directories_for_previews(self):
-        return [CARDS_FOLDER]
+        folders = set()
+        folders.add(CARDS_FOLDER)
+
+        objs = glob.glob(os.path.join(CARDS_FOLDER, "**", "*"), recursive=True)
+        for obj in objs:
+            if os.path.isdir(obj):
+                folders.add(obj)
+
+        return list(folders)
 
 
 script_callbacks.on_before_ui(lambda: register_page(EasyTags()))
