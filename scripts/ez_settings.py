@@ -1,5 +1,4 @@
 from modules import script_callbacks, shared, scripts
-import gradio as gr
 import os
 
 
@@ -10,8 +9,8 @@ section = ("ez", "EZ Tags")
 def add_ui_settings():
     shared.opts.add_option(
         "ez_use_style",
-        shared.OptionInfo(True, "Use custom style", section=section)
-        .info("Disable to use the built-in look (like LoRAs) (allow preview images)")
+        shared.OptionInfo(True, "Use custom style", section=section, category_id="ui")
+        .info("Disable to use the built-in looks like LoRAs) (allow preview images")
         .needs_reload_ui(),
     )
 

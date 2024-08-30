@@ -1,3 +1,13 @@
+#### v1.6.1 - 2024 Aug.30
+- Add Settings **Section**
+
+#### v1.6.0 - 2024 Jul.04
+- Overhaul the entire page
+- Support **Preview** images
+
+#### v1.5.0 - 2024 Jun.10
+- Implement **Editor** for tags
+
 #### v1.4.0 - 2024 May.20
 - Load from files directly without YAML
 
