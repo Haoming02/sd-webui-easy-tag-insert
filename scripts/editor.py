@@ -11,6 +11,7 @@ CACHE: dict = None
 
 
 def load() -> str:
+    global CACHE
     data: dict = {}
     cards: list[str] = [
         obj
@@ -20,6 +21,7 @@ def load() -> str:
 
     if len(cards) == 0:
         gr.Warning('No Valid ".tag" File is Detected...')
+        CACHE = {}
         return None
 
     for card in cards:
@@ -35,7 +37,6 @@ def load() -> str:
         else:
             data[category].update({name: prompt})
 
-    global CACHE
     CACHE = data
     return dumps(data)
 
@@ -43,6 +44,7 @@ def load() -> str:
 def save(json_str: str):
     global CACHE
     data: dict = loads(json_str)
+    changes: int = 0
 
     for category, cards in data.items():
         for name, prompt in cards.items():
@@ -61,6 +63,7 @@ def save(json_str: str):
                 mode="w+",
             ) as card:
                 card.write(f"{prompt}\n")
+                changes += 1
 
     for category, cards in CACHE.items():
         for name, prompt in cards.items():
@@ -68,9 +71,10 @@ def save(json_str: str):
                 continue
 
             os.remove(os.path.join(CARDS_FOLDER, category, f"{name}.tag"))
+            changes += 1
 
     CACHE = data
-    gr.Info("Cards Saved")
+    gr.Info(f"Cards Saved ({changes}x Changes Made)")
 
 
 def editor_ui():
