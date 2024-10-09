@@ -41,7 +41,7 @@ The cards are loaded from the `.tag` files inside the `cards` folder. On a fresh
   - Order of the cards does not matter
 - Press the **Save** button to save the tags into the folder
   - Rows with any column empty will be **ignored**
-- You can then live reload the entries by pressing the **Refresh** button in the `Extra Networks`, without having to restart the UI
+- You can then live reload the cards by pressing the **Refresh** button in the `Extra Networks`, without having to restart the UI
 
 <p align="center">
 <img src="./editor.png" width=768>

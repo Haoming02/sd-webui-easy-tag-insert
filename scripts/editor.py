@@ -10,6 +10,13 @@ CACHE: dict = None
 """handle deletion"""
 
 
+def delete_empty_folders(path: str):
+    for par, folders, _ in os.walk(path, topdown=False):
+        for folder in [os.path.join(par, f) for f in folders]:
+            if not os.listdir(folder):
+                os.rmdir(folder)
+
+
 def load() -> str:
     global CACHE
     data: dict = {}
@@ -75,6 +82,7 @@ def save(json_str: str):
 
     CACHE = data
     gr.Info(f"Cards Saved ({changes}x Changes Made)")
+    delete_empty_folders(CARDS_FOLDER)
 
 
 def editor_ui():
