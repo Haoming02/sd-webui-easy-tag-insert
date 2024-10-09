@@ -1,3 +1,6 @@
+#### v2.0.0 - 2024 Oct.09
+- Overhaul
+
 #### v1.6.1 - 2024 Aug.30
 - Add Settings **Section**
 

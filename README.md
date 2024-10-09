@@ -1,54 +1,48 @@
 ﻿# SD Webui Easy Tag Insert
 This is an Extension for the [Automatic1111 Webui](https://github.com/AUTOMATIC1111/stable-diffusion-webui), which trivializes inserting prompts.
 
-> Compatible with [Forge](https://github.com/lllyasviel/stable-diffusion-webui-forge)~
+> Also supports [Forge](https://github.com/lllyasviel/stable-diffusion-webui-forge)
 
 <p align="center">
-<img src="sample.jpg"><br>
-<i>(<a href="https://github.com/catppuccin/stable-diffusion-webui">Catppuccin Theme</a>)</i>
+<img src="./ui.png" width=768><br>
+<i>(<a href="https://github.com/Haoming02/catppuccin-theme">Catppuccin Theme</a>)</i>
 </p>
 
-> This Extension has been updated to work for the latest version of the Webui.
-If you're using an older version, please refer to [Releases](https://github.com/Haoming02/sd-webui-easy-tag-insert/releases).
-
 ## How to Use
-This Extension creates buttons in a new `Extra Networks` tab, **EZ Tags**.
-When clicked, it will add the specified string into the prompt field.
+This Extension creates customizable buttons in a new `Extra Networks` tab, "**EZ Tags**." When clicked, the buttons will add your specified string into either the **Positive** or the **Negative** prompt field.
 
 ## Use Cases
-You can use this Extension to simply make shortcuts for very long prompts:
+You can use this Extension to simply make shortcuts for long prompts:
+
 ```yaml
-  Positive: (high quality, best quality)
-  Negative: (low quality, worst quality:1.2)
+Positive: (high quality, best quality)
+Negative: (low quality, worst quality)
 ```
 
-This is especially useful with LoRAs, such as those that contain multiple concepts using different **trigger words**:
+This is useful for LoRA **trigger words**, especially those that contain multiple concepts/characters:
+
 ```yaml
-  Chara1: trigger1, <lora:franchise:0.75>
-  Chara2: trigger2, <lora:franchise:0.75>
+Chara1: trigger1, <lora:all_chara_pack:0.75>
+Chara2: trigger2, <lora:all_chara_pack:0.75>
+Chara3: trigger3, <lora:all_chara_pack:0.75>
 ```
 
-## How to Edit Entries
-The tags are loaded from the `.tag` files inside the `cards` folder. You may edit the entries by modifying the table in the **EZ Tags Editor** tab:
+## How to Edit Cards
+The cards are loaded from the `.tag` files inside the `cards` folder. On a fresh install, the Extension will automatically rename the `examples` folder to `cards`. You may add/remove cards by modifying the Table in the **EZ Tags Editor** tab:
 
-- Press the **Load** button to load the tags into the table
-  - **folder**: The path used to filter/categorize
-  - **filename**: The displayed name of the buttons
-  - **prompt**: The strings to add to the field
-- Press the **Save** button to save the tags into the `cards` folder
-  - Rows with any column empty will be skipped
-  - Empty folder will be deleted afterwards
-- If no `cards` folder is present (**eg.** fresh install), it will automatically copy the `samples` folder to `cards`
-- You can live reload the entries after editing by pressing the **Refresh** button, without restarting the UI
+- Press the **Load** button first to load the cards into the Table
+  - To add a new card, simply write a new entry in the last row; the Table will automatically expand; empty rows will be deleted
+  - To remove a card, press the `❌` button
+  - You can have `\` character in **Category** for better grouping; these get created as sub-folders
+    - Do **not** add `\` in **Name**
+  - Order of the cards do not matter
+- Press the **Save** button to save the tags into the folder
+  - Rows with any column empty will be **ignored**
+- You can then live reload the entries by pressing the **Refresh** button in the `Extra Networks`, without having to restart the UI
 
-## Sorting
-You can toggle the sorting between multiple modes:
-
-- First by `Category`, then by `Display Name`
-- By `Index` *(the order they are loaded in)*
-- First by `Category`, then by `Index`
-- By `Display Name`
+<p align="center">
+<img src="./editor.png" width=768>
+</p>
 
 ## Setting
-You can go to the `EZ Tags` section in the **Settings**, and disable the use of my custom style. This reverts the cards back to the native Webui look *(just like LoRAs, etc)*, thus allowing you to add preview images for the cards in the folder.
-  > Just like other **ExtraNetwork**, add `.preview` to the image filename
+You can go to the `EZ Tags` section under <ins>User Interface</ins> in the **Settings**, and disable the use of provided custom style. This reverts the cards back to the native Webui look, and allows you to add preview images to the cards.

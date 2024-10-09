@@ -1,12 +1,11 @@
 from modules import scripts
-
 import os
 import re
 
 
-SAMPLE_FOLDER = os.path.join(scripts.basedir(), "samples")
+EXAMPLE_FOLDER = os.path.join(scripts.basedir(), "examples")
 CARDS_FOLDER = os.path.join(scripts.basedir(), "cards")
-TAGS_FOLDER = os.path.join(scripts.basedir(), "tags")
+CSS = os.path.join(scripts.basedir(), "style.css")
 
 
 def sanitize(item: str) -> str:

@@ -1,1 +1,0 @@
-(low quality, worst quality)

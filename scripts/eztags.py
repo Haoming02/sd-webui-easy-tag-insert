@@ -1,17 +1,18 @@
 ﻿from modules.ui_extra_networks import ExtraNetworksPage, quote_js, register_page
-from modules import shared, script_callbacks
+from modules.script_callbacks import on_before_ui, on_ui_settings
+from modules.shared import opts
+from shutil import copytree
+from glob import glob
+import os
 
-from scripts.ez_utils import (
-    SAMPLE_FOLDER,
+
+from lib_ez.settings import add_ui_settings, load_ui_settings
+from lib_ez.utils import (
+    EXAMPLE_FOLDER,
     CARDS_FOLDER,
-    TAGS_FOLDER,
     sanitize,
     sanitize_int,
 )
-
-import shutil
-import glob
-import os
 
 
 class EasyTags(ExtraNetworksPage):
@@ -21,44 +22,37 @@ class EasyTags(ExtraNetworksPage):
         self.allow_negative_prompt = True
         self.cards_db = None
 
-        if os.path.exists(TAGS_FOLDER):
-            print('\n[EZ Tags] "tags" folder has been deprecated. You may delete it~\n')
         if not os.path.exists(CARDS_FOLDER):
             print('\n[EZ Tags] "cards" folder not found. Initializing...\n')
-            shutil.copytree(SAMPLE_FOLDER, CARDS_FOLDER)
+            copytree(EXAMPLE_FOLDER, CARDS_FOLDER)
 
         self.refresh()
 
     def refresh(self):
         self.cards_db: dict[str, str] = {}
-        objs = glob.glob(os.path.join(CARDS_FOLDER, "**", "*"), recursive=True)
+        objs = glob(os.path.join(CARDS_FOLDER, "**", "*"), recursive=True)
 
-        for filename in objs:
-            if os.path.isdir(filename):
+        for path in objs:
+            if not path.endswith(".tag"):
                 continue
 
-            if not filename.endswith(".tag"):
-                continue
-
-            name = os.path.splitext(filename.rsplit(os.sep, 1)[1])[0]
-
+            name, _ = os.path.splitext(os.path.basename(path))
             if name in self.cards_db:
                 print(f'\n[EZ Tags] Duplicated filename "{name}" was found!\n')
 
-            self.cards_db.update({name: [filename, -1]})
+            self.cards_db.update({name: [path, None]})
 
-    def create_item(self, name: str, index: str = None, enable_filter: bool = True):
+    def create_item(self, name: str, index: str = None, *arg, **kwarg):
         if index is not None:
             self.cards_db[name][1] = index
 
         filename, index = self.cards_db[name]
-
         with open(filename, "r", encoding="utf-8") as card:
-            prompt = card.read().strip()
+            prompt = card.readline().strip()
 
         path, ext = os.path.splitext(filename)
         relative_path = os.path.relpath(path, CARDS_FOLDER)
-        category = relative_path.rsplit(os.sep, 1)[0]
+        category, name = relative_path.rsplit(os.sep, 1)
 
         return {
             "name": name.strip(),
@@ -68,7 +62,7 @@ class EasyTags(ExtraNetworksPage):
             "description": self.find_description(path),
             "search_terms": [self.search_terms_from_path(filename)],
             "prompt": quote_js(prompt),
-            "local_preview": f"{path}.preview.{shared.opts.samples_format}",
+            "local_preview": f"{path}.preview.{opts.samples_format}",
             "sort_keys": {
                 "default": sanitize(f"{category.lower()}-{name.lower()}"),
                 "date_created": index,
@@ -78,22 +72,19 @@ class EasyTags(ExtraNetworksPage):
         }
 
     def list_items(self):
-        i = 0
-
-        for name in self.cards_db.keys():
-            i += 1
-            yield self.create_item(name, sanitize_int(i))
+        for i, name in enumerate(self.cards_db.keys()):
+            yield self.create_item(name, sanitize_int(i + 1))
 
     def allowed_directories_for_previews(self):
         folders = set()
-        folders.add(CARDS_FOLDER)
-
-        objs = glob.glob(os.path.join(CARDS_FOLDER, "**", "*"), recursive=True)
-        for obj in objs:
-            if os.path.isdir(obj):
-                folders.add(obj)
+        objs = glob(os.path.join(CARDS_FOLDER, "**", "*"), recursive=True)
+        for path in objs:
+            if os.path.isdir(path):
+                folders.add(path)
 
         return list(folders)
 
 
-script_callbacks.on_before_ui(lambda: register_page(EasyTags()))
+on_ui_settings(add_ui_settings)
+on_before_ui(load_ui_settings)
+on_before_ui(lambda: register_page(EasyTags()))

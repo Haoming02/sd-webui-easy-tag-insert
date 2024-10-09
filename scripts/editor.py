@@ -1,110 +1,99 @@
-﻿from modules import script_callbacks
-from scripts.ez_utils import CARDS_FOLDER
-
+﻿from modules.script_callbacks import on_ui_tabs
+from json import loads, dumps
+from glob import glob
 import gradio as gr
-import glob
 import os
 
+from lib_ez.utils import CARDS_FOLDER
 
-def clean_empty_folders(path: str):
-    if not os.path.isdir(path):
-        return
-
-    if len(os.listdir(path)) > 0:
-        for obj in os.listdir(path):
-            clean_empty_folders(os.path.join(path, obj))
-
-    if len(os.listdir(path)) == 0:
-        os.remove(path)
+CACHE: dict = None
+"""handle deletion"""
 
 
-def load():
-    data: list[list] = []
-    cards: list[str] = []
+def load() -> str:
+    data: dict = {}
+    cards: list[str] = [
+        obj
+        for obj in glob(os.path.join(CARDS_FOLDER, "**", "*"), recursive=True)
+        if obj.endswith(".tag")
+    ]
 
-    objs = glob.glob(os.path.join(CARDS_FOLDER, "**", "*"), recursive=True)
-
-    for obj in objs:
-        if os.path.isdir(obj):
-            continue
-
-        if obj.endswith(".tag"):
-            cards.append(obj)
+    if len(cards) == 0:
+        gr.Warning('No Valid ".tag" File is Detected...')
+        return None
 
     for card in cards:
+        with open(card, "r", encoding="utf-8") as file:
+            prompt = file.readline().strip()
+
         path, ext = os.path.splitext(card)
         relative_path = os.path.relpath(path, CARDS_FOLDER)
         category, name = relative_path.rsplit(os.sep, 1)
 
-        with open(card, "r", encoding="utf-8") as card:
-            prompt = card.read().strip()
+        if category not in data:
+            data.update({category: {name: prompt}})
+        else:
+            data[category].update({name: prompt})
 
-        data.append([category, name, prompt])
+    global CACHE
+    CACHE = data
+    return dumps(data)
 
-    return data
 
+def save(json_str: str):
+    global CACHE
+    data: dict = loads(json_str)
 
-def save(data: list):
-    cards: list[str] = []
-    objs = glob.glob(os.path.join(CARDS_FOLDER, "**", "*"), recursive=True)
+    for category, cards in data.items():
+        for name, prompt in cards.items():
+            if (
+                category in CACHE
+                and name in CACHE[category]
+                and prompt == CACHE[category][name]
+            ):
+                CACHE[category].pop(name)
+                continue
 
-    for obj in objs:
-        if os.path.isdir(obj):
-            continue
-        if obj.endswith(".tag"):
-            cards.append(obj)
+            os.makedirs(os.path.join(CARDS_FOLDER, category), exist_ok=True)
+            with open(
+                os.path.join(CARDS_FOLDER, category, f"{name}.tag"),
+                encoding="utf-8",
+                mode="w+",
+            ) as card:
+                card.write(f"{prompt}\n")
 
-    for category, name, prompt in data:
-        category = category.strip()
-        name = name.strip()
-        prompt = prompt.strip()
+    for category, cards in CACHE.items():
+        for name, prompt in cards.items():
+            if data.get(category, {}).get(name, False):
+                continue
 
-        if (not category) or (not name) or (not prompt):
-            continue
+            os.remove(os.path.join(CARDS_FOLDER, category, f"{name}.tag"))
 
-        folder = os.path.join(CARDS_FOLDER, category)
-        if not os.path.exists(folder):
-            os.makedirs(folder)
-
-        card = os.path.join(folder, f"{name}.tag")
-
-        if card in cards:
-            cards.remove(card)
-
-        with open(card, "w+", encoding="utf-8") as file:
-            file.write(prompt)
-
-    for card in cards:
-        os.remove(card)
-
-    for obj in os.listdir(CARDS_FOLDER):
-        clean_empty_folders(os.path.join(CARDS_FOLDER, obj))
+    CACHE = data
+    gr.Info("Cards Saved")
 
 
 def editor_ui():
-
     with gr.Blocks() as TAGS_EDITOR:
         with gr.Row():
             save_btn = gr.Button("Save", variant="primary", interactive=False)
-            load_btn = gr.Button("Load", interactive=True)
+            load_btn = gr.Button("Load")
 
-        tags = gr.Dataframe(
-            label="Tags Editor",
-            headers=["folder", "filename", "prompt"],
-            datatype="str",
-            row_count=(1, "dynamic"),
-            col_count=(3, "fixed"),
-            interactive=True,
-            type="array",
+        gr.HTML('<div id="ez-editor"></div>')
+
+        with gr.Row(visible=False):
+            tags = gr.Textbox(elem_id="ez-editor-box")
+            real_save_btn = gr.Button("Save", elem_id="ez-editor-btn")
+
+        save_btn.click(fn=None, _js="() => { EasyTagEditor.save(); }")
+        real_save_btn.click(fn=save, inputs=[tags])
+        load_btn.click(fn=load, outputs=[tags]).success(
+            fn=lambda: gr.update(interactive=True),
+            outputs=[save_btn],
+            _js="() => { EasyTagEditor.load(); }",
         )
-
-        load_btn.click(fn=load, inputs=None, outputs=[tags]).success(
-            lambda: gr.update(interactive=True), inputs=None, outputs=[save_btn]
-        )
-
-        save_btn.click(fn=save, inputs=[tags], outputs=None)
 
     return [(TAGS_EDITOR, "EZ Tags Editor", "sd-webui-ez-tags-editor")]
 
 
-script_callbacks.on_ui_tabs(editor_ui)
+on_ui_tabs(editor_ui)

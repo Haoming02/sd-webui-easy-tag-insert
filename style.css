@@ -1,80 +1,76 @@
-#txt2img_ez_tags_cards {
-    padding: 2em;
+.ez-tag-container .extra-network-cards {
+    padding: 1em;
 }
 
-#txt2img_ez_tags_cards_html .card {
+.ez-tag-container .card {
     background-image: linear-gradient(90deg, var(--button-secondary-background-fill), var(--button-primary-background-fill));
-    font-size: 100%;
     height: 3em;
     width: 12em;
     margin: 0.5em;
 }
 
-    #txt2img_ez_tags_cards_html .card .button-row {
-        display: none
-    }
-
-    #txt2img_ez_tags_cards_html .card .actions {
-        background: none;
-        box-shadow: none;
-        position: inherit;
-        width: 100%;
-        height: 100%;
-    }
-
-        #txt2img_ez_tags_cards_html .card .actions .name {
-            display: inline-flex;
-            position: relative;
-            align-items: center;
-            width: 100%;
-            height: 100%;
-            left: 16%;
-            font-size: 1em;
-            overflow: hidden;
-            white-space: nowrap;
-        }
-
-        #txt2img_ez_tags_cards_html .card .actions .description {
-            display: none;
-        }
-
-
-#img2img_ez_tags_cards {
-    padding: 2em;
+.ez-tag-container .card .actions {
+    background: none;
+    box-shadow: none;
+    position: inherit;
+    width: 100%;
+    height: 100%;
 }
 
-#img2img_ez_tags_cards_html .card {
-    background-image: linear-gradient(90deg, var(--button-secondary-background-fill), var(--button-primary-background-fill));
-    font-size: 100%;
-    height: 3em;
-    width: 12em;
-    margin: 0.5em;
+.ez-tag-container .card .actions .name {
+    display: inline-flex;
+    position: relative;
+    align-items: center;
+    width: 90%;
+    height: 100%;
+    left: 1.2em;
+    font-size: 1em;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
-    #img2img_ez_tags_cards_html .card .button-row {
-        display: none
-    }
+.ez-tag-container .card .button-row {
+    display: none
+}
 
-    #img2img_ez_tags_cards_html .card .actions {
-        background: none;
-        box-shadow: none;
-        position: inherit;
-        width: 100%;
-        height: 100%;
-    }
+.ez-tag-container .card .actions .additional {
+    display: none;
+}
 
-        #img2img_ez_tags_cards_html .card .actions .name {
-            display: inline-flex;
-            position: relative;
-            align-items: center;
-            width: 100%;
-            height: 100%;
-            left: 16%;
-            font-size: 1em;
-            overflow: hidden;
-            white-space: nowrap;
-        }
+.ez-tag-container .card .actions .description {
+    display: none;
+}
 
-        #img2img_ez_tags_cards_html .card .actions .description {
-            display: none;
-        }
+#ez-editor table {
+    width: 80vw;
+    margin: auto;
+    table-layout: fixed;
+}
+
+#ez-editor table :is(th, td) {
+    border: 2px solid var(--table-border-color) !important;
+    text-overflow: clip;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+#ez-editor thead th {
+    text-align: center;
+    padding: 1em;
+}
+
+#ez-editor thead tr {
+    background-color: var(--block-background-fill);
+}
+
+#ez-editor tbody td {
+    padding: 1em;
+}
+
+#ez-editor tbody tr:nth-child(odd) {
+    background-color: var(--table-odd-background-fill);
+}
+
+#ez-editor tbody tr:nth-child(even) {
+    background-color: var(--table-even-background-fill);
+}
