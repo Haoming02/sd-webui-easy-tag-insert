@@ -5,6 +5,7 @@ import gradio as gr
 import os
 
 from lib_ez.utils import CARDS_FOLDER
+from lib_ez.gradio import js
 
 CACHE: dict = None
 """handle deletion"""
@@ -97,12 +98,12 @@ def editor_ui():
             tags = gr.Textbox(elem_id="ez-editor-box")
             real_save_btn = gr.Button("Save", elem_id="ez-editor-btn")
 
-        save_btn.click(fn=None, _js="() => { EasyTagEditor.save(); }")
+        save_btn.click(fn=None, **js("() => { EasyTagEditor.save(); }"))
         real_save_btn.click(fn=save, inputs=[tags])
         load_btn.click(fn=load, outputs=[tags]).success(
             fn=lambda: gr.update(interactive=True),
             outputs=[save_btn],
-            _js="() => { EasyTagEditor.load(); }",
+            **js("() => { EasyTagEditor.load(); }"),
         )
 
     return [(TAGS_EDITOR, "EZ Tags Editor", "sd-webui-ez-tags-editor")]
