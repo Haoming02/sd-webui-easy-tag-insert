@@ -31,7 +31,6 @@ Chara3: trigger3, <lora:all_chara_pack:0.75>
 The cards are loaded from the `.tag` files inside the `cards` folder. On a fresh install, the Extension will automatically rename the `examples` folder to `cards`. You may add/remove cards by modifying the Table in the **EZ Tags Editor** tab:
 
 - Press the **Load** button first to load the cards into the Table
-  - If you write anything before pressing **Load**, they will be overwritten
   - To add a new card, simply write a new entry in the last row
     - The Table will automatically expand
     - Completely empty rows are deleted

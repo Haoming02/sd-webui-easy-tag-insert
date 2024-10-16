@@ -42,9 +42,25 @@ class EasyTagEditor {
         this.#field = document.getElementById("ez-editor-box").querySelector("textarea");
         this.#button = document.getElementById("ez-editor-btn");
         this.#constructTable(document.getElementById("ez-editor"));
-        this.#addRow(["", "", ""]);
 
         this.#table.addEventListener("keyup", () => { this.#onEdit(); });
+        this.#table.addEventListener("paste", (e) => {
+            e.preventDefault();
+            const text = e.clipboardData.getData('text/plain');
+            const selection = window.getSelection();
+
+            if (selection.rangeCount > 0) {
+                const range = selection.getRangeAt(0);
+                range.deleteContents();
+                const node = document.createTextNode(text);
+                range.insertNode(node);
+
+                range.setStartAfter(node);
+                range.collapse(true);
+                selection.removeAllRanges();
+                selection.addRange(range);
+            }
+        });
     }
 
     static save() {
