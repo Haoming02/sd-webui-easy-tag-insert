@@ -13,8 +13,19 @@ def add_ui_settings():
             section=("ez", "EZ Tags"),
             category_id="ui",
         )
-        .info("Disable to use the built-in ExtraNetwork looks) (allow preview images")
+        .info("Disable to use the built-in Extra Networks visual")
+        .info("allow preview images")
         .needs_reload_ui(),
+    )
+
+    opts.add_option(
+        "ez_use_category",
+        OptionInfo(
+            True,
+            "Group the Cards based on Categories",
+            section=("ez", "EZ Tags"),
+            category_id="ui",
+        ).needs_reload_ui(),
     )
 
 

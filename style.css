@@ -1,12 +1,15 @@
 .ez-tag-container .extra-network-cards {
     padding: 1em;
+    user-select: none;
 }
 
 .ez-tag-container .card {
     background-image: linear-gradient(90deg, var(--button-secondary-background-fill), var(--button-primary-background-fill));
+    background-size: 101%;
     height: 3em;
-    width: 12em;
-    margin: 0.5em;
+    width: calc(10% - 1.5em);
+    min-width: 6em;
+    margin: 0.75em;
 }
 
 .ez-tag-container .card .actions {
@@ -73,4 +76,22 @@
 
 #ez-editor tbody tr:nth-child(even) {
     background-color: var(--table-even-background-fill);
+}
+
+.ez-tag-container div.style-bracket {
+    background: var(--input-background-fill);
+    border-radius: 0.5em;
+    padding: 0.5em;
+    margin: 1em 0em;
+}
+
+.ez-tag-container div.style-bracket>span {
+    display: block;
+    width: calc(100% - 1em);
+    background: var(--input-border-color);
+    border-radius: 0.2rem;
+    padding: 0em 0.5em;
+    margin: 0.5em;
+    text-shadow: black 1px 1px 2px;
+    font-weight: bold;
 }

@@ -156,4 +156,7 @@ onUiLoaded(() => {
         const container = document.getElementById(`${mode}2img_ez_tags_cards_html`);
         container.classList.add("ez-tag-container");
     });
+
+    if (document.getElementById("setting_ez_use_category").querySelector("input[type=checkbox]").checked)
+        EasyTagStyler.init();
 });

@@ -64,10 +64,10 @@ class EasyTags(ExtraNetworksPage):
             "prompt": quote_js(prompt),
             "local_preview": f"{path}.preview.{opts.samples_format}",
             "sort_keys": {
-                "default": sanitize(f"{category.lower()}-{name.lower()}"),
+                "default": sanitize(f"{category}-{name}"),
                 "date_created": index,
-                "date_modified": sanitize(f"{category.lower()}-{index}"),
-                "name": sanitize(name.lower()),
+                "date_modified": sanitize(f"{category}-{index}"),
+                "name": sanitize(name),
             },
         }
 

@@ -46,5 +46,8 @@ The cards are loaded from the `.tag` files inside the `cards` folder. On a fresh
 <img src="./editor.png" width=768>
 </p>
 
-## Setting
-You can go to the `EZ Tags` section under <ins>User Interface</ins> in the **Settings**, and disable the use of the provided custom style. This reverts the cards back to the native Webui look, and allows you to add preview images to the cards.
+## Settings
+> The following are in the `EZ Tags` section under the <ins>User Interface</ins> category of the **Settings** tab
+
+- [ ] You can disable the use of the provided custom style. This reverts the cards back to the native Webui look, and allows you to add preview images to the cards.
+- [ ] You can disable the grouping of the cards based on Categories. This reverts the cards placement back to the native Webui look, and allows you to sort the cards.
