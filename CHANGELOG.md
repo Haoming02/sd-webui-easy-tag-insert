@@ -1,3 +1,8 @@
+#### v3.0.0 - 2025 Mar.07
+- Overhaul 2: Electric Boogaloo
+
+<br>
+
 #### v2.0.0 - 2024 Oct.09
 - Overhaul
 

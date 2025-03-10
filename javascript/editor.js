@@ -1,32 +1,31 @@
 class EasyTagEditor {
 
-    static #headers = ["Category", "Name", "Prompt", "Del"];
-    static #columnWidth = ["15%", "15%", "65%", "5%"];
-
     /** @type {HTMLTableElement} */
-    static #table = undefined;
+    static #table;
     /** @type {HTMLTextAreaElement} */
-    static #field = undefined;
+    static #field;
     /** @type {HTMLButtonElement} */
-    static #button = undefined;
+    static #button;
 
     /** @param {HTMLDivElement} frame */
     static #constructTable(frame) {
         const table = document.createElement("table");
+        const thead = document.createElement('thead');
 
+        const columnWidths = ["15%", "15%", "65%", "5%"];
         const colgroup = document.createElement('colgroup');
-        for (let c = 0; c < this.#headers.length; c++) {
+        for (const width of columnWidths) {
             const col = document.createElement('col');
-            col.style.width = this.#columnWidth[c];
+            col.style.width = width;
             colgroup.appendChild(col);
         }
         table.appendChild(colgroup);
 
-        const thead = document.createElement('thead');
+        const headers = ["Category", "Name", "Prompt", "Del"];
         const thr = thead.insertRow();
-        for (let c = 0; c < this.#headers.length; c++) {
+        for (const header of headers) {
             const th = document.createElement('th');
-            th.textContent = this.#headers[c];
+            th.textContent = header;
             thr.appendChild(th);
         }
         table.appendChild(thead);
@@ -64,25 +63,25 @@ class EasyTagEditor {
     }
 
     static save() {
-        const DATA = {};
+        const data = {};
         const rows = this.#table.querySelectorAll("tr");
 
-        rows.forEach((row) => {
+        for (const row of rows) {
             const cells = row.querySelectorAll("td");
             const category = cells[0].textContent.trim();
             const name = cells[1].textContent.trim();
             const prompt = cells[2].textContent.trim();
 
             if ((!category) || (!name) || (!prompt))
-                return;
+                continue;
 
-            if (!(category in DATA))
-                DATA[category] = { [name]: prompt };
-            else
-                DATA[category][name] = prompt;
-        });
+            if (!data.hasOwnProperty(category))
+                data[category] = {};
 
-        this.#field.value = JSON.stringify(DATA);
+            data[category][name] = prompt;
+        }
+
+        this.#field.value = JSON.stringify(data);
         updateInput(this.#field);
         this.#button.click();
     }
@@ -92,15 +91,11 @@ class EasyTagEditor {
             this.#table.removeChild(this.#table.firstChild);
 
         const val = this.#field.value;
-        if (!val.trim()) {
-            this.#addRow(["", "", ""]);
-            return;
-        }
-
-        const data = JSON.parse(val);
-        for (const [category, cards] of Object.entries(data)) {
-            for (const [name, prompt] of Object.entries(cards)) {
-                this.#addRow([category, name, prompt])
+        if (Boolean(val.trim())) {
+            const data = JSON.parse(val);
+            for (const [category, cards] of Object.entries(data)) {
+                for (const [name, prompt] of Object.entries(cards))
+                    this.#addRow([category, name, prompt])
             }
         }
 
@@ -110,14 +105,16 @@ class EasyTagEditor {
     /** @param {string[]} content [category, name, prompt] */
     static #addRow(content) {
         const tr = this.#table.insertRow();
-        for (let c = 0; c < this.#headers.length - 1; c++) {
+
+        for (const txt of content) {
             const td = tr.insertCell();
             td.contentEditable = true;
-            td.textContent = content[c];
+            td.textContent = txt;
         }
 
         const td = tr.insertCell();
         td.style.textAlign = "center";
+
         const del = document.createElement("button");
         del.title = "Delete this Card";
         del.style.margin = "auto";
@@ -138,7 +135,7 @@ class EasyTagEditor {
         this.#addRow(["", "", ""]);
     }
 
-    /** @param {HTMLTableRowElement} row  @returns {boolean} */
+    /** @param {HTMLTableRowElement} row @returns {boolean} */
     static #isEmpty(row) {
         const cells = row.querySelectorAll("td");
         return (
@@ -150,13 +147,4 @@ class EasyTagEditor {
 
 }
 
-onUiLoaded(() => {
-    EasyTagEditor.init();
-    ['txt', 'img'].forEach((mode) => {
-        const container = document.getElementById(`${mode}2img_ez_tags_cards_html`);
-        container.classList.add("ez-tag-container");
-    });
-
-    if (document.getElementById("setting_ez_use_category").querySelector("input[type=checkbox]").checked)
-        EasyTagStyler.init();
-});
+onUiLoaded(() => { EasyTagEditor.init(); });

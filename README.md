@@ -1,15 +1,15 @@
 ﻿# SD Webui Easy Tag Insert
 This is an Extension for the [Automatic1111 Webui](https://github.com/AUTOMATIC1111/stable-diffusion-webui), which trivializes inserting prompts.
 
-> Also supports [Forge](https://github.com/lllyasviel/stable-diffusion-webui-forge)
+> Compatible with [Forge](https://github.com/lllyasviel/stable-diffusion-webui-forge)
 
 <p align="center">
 <img src="./ui.png" width=768><br>
-<i>(<a href="https://github.com/Haoming02/catppuccin-theme">Catppuccin Theme</a>)</i>
+<i>(with <code>Group the Cards based on Categories</code> enabled)</i>
 </p>
 
 ## How to Use
-This Extension creates customizable buttons in a new `Extra Networks` tab, "**EZ Tags**." When clicked, the buttons will add your specified string into either the **Positive** or the **Negative** prompt field.
+This Extension creates a new "Extra Networks" tab - **EZ-Tags**. You can customize the cards so that they insert the specified prompts when clicked. Support both **Positive** and **Negative** prompt fields.
 
 ## Use Cases
 You can use this Extension to simply make shortcuts for long prompts:
@@ -28,12 +28,12 @@ Chara3: trigger3, <lora:all_chara_pack:0.75>
 ```
 
 ## How to Edit Cards
-The cards are loaded from the `.tag` files inside the `cards` folder. On a fresh install, the Extension will automatically rename the `examples` folder to `cards`. You may add/remove cards by modifying the Table in the **EZ Tags Editor** tab:
+The cards are loaded from the `.tag` files inside the `cards` folder. On a fresh install, the Extension will automatically rename the `examples` folder into `cards`. You may add/remove cards by modifying the Table in the **EZ Tags Editor** tab:
 
 - Press the **Load** button first to load the cards into the Table
   - To add a new card, simply write a new entry in the last row
     - The Table will automatically expand
-    - Completely empty rows are deleted
+    - Completely empty rows will be deleted
   - To remove a card, press the `❌` button
   - You can have `\` character in **Category** for better grouping; these get created as sub-folders
     - Do **not** add `\` in **Name**
@@ -47,7 +47,7 @@ The cards are loaded from the `.tag` files inside the `cards` folder. On a fresh
 </p>
 
 ## Settings
-> The following are in the `EZ Tags` section under the <ins>User Interface</ins> category of the **Settings** tab
+> *found in the `EZ Tags` section under the <ins>User Interface</ins> category of the **Settings** tab*
 
-- [ ] You can disable the use of the provided custom style. This reverts the cards back to the native Webui look, and allows you to add preview images to the cards.
-- [ ] You can disable the grouping of the cards based on Categories. This reverts the cards placement back to the native Webui look, and allows you to sort the cards.
+- **Group the Cards based on Categories:** This create a new row per category, to help you find the card more easily
+  - Recommended to lower the card size if enabled

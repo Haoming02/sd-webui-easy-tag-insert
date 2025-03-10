@@ -1,49 +1,3 @@
-.ez-tag-container .extra-network-cards {
-    padding: 1em;
-    user-select: none;
-}
-
-.ez-tag-container .card {
-    background-image: linear-gradient(90deg, var(--button-secondary-background-fill), var(--button-primary-background-fill));
-    background-size: 101%;
-    height: 3em;
-    width: calc(10% - 1.5em);
-    min-width: 6em;
-    margin: 0.75em;
-}
-
-.ez-tag-container .card .actions {
-    background: none;
-    box-shadow: none;
-    position: inherit;
-    width: 100%;
-    height: 100%;
-}
-
-.ez-tag-container .card .actions .name {
-    display: inline-flex;
-    position: relative;
-    align-items: center;
-    width: 90%;
-    height: 100%;
-    left: 1.2em;
-    font-size: 1em;
-    overflow: hidden;
-    white-space: nowrap;
-}
-
-.ez-tag-container .card .button-row {
-    display: none
-}
-
-.ez-tag-container .card .actions .additional {
-    display: none;
-}
-
-.ez-tag-container .card .actions .description {
-    display: none;
-}
-
 #ez-editor table {
     width: 80vw;
     margin: auto;
@@ -82,16 +36,37 @@
     background: var(--input-background-fill);
     border-radius: 0.5em;
     padding: 0.25em;
-    margin: 0.5em 0em;
+    margin: 0.5em;
+    position: relative;
+    overflow: hidden;
+    display: block;
+}
+
+@supports(selector(:has(div))) {
+    .ez-tag-container div.style-bracket {
+        display: none;
+    }
+
+    .ez-tag-container div.style-bracket:has(> div > :not(.hidden)) {
+        display: block;
+    }
 }
 
 .ez-tag-container div.style-bracket>span {
-    display: block;
-    width: calc(100% - 1em);
-    background: var(--input-border-color);
-    border-radius: 0.2rem;
-    padding: 0em 0.5em;
-    margin: 0.5em;
-    font-size: smaller;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2em;
     color: var(--block-title-text-color);
+    pointer-events: none;
+    user-select: none;
+    white-space: nowrap;
+    z-index: 10;
+    opacity: 0.25;
+}
+
+.ez-tag-container div.style-bracket:hover>span {
+    z-index: unset;
+    opacity: 0.1;
 }
