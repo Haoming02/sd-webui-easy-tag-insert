@@ -51,3 +51,5 @@ The cards are loaded from the `.tag` files inside the `cards` folder. On a fresh
 
 - **Group the Cards based on Categories:** This create a new row per category, to help you find the card more easily
   - Recommended to lower the card size if enabled
+- **Use custom style:** This overrides the default `Extra Networks` look with smaller and stylized cards, resulting in a more compact selection
+  - *(The original look before the **v3.0** rewrite)*

@@ -65,14 +65,16 @@ class EasyTagStyler {
 }
 
 onUiLoaded(() => {
-    const config = document.getElementById("setting_ez_use_category").querySelector("input[type=checkbox]");
-    if (!config.checked)
-        return;
+    const config_category = document.getElementById("setting_ez_use_category").querySelector("input[type=checkbox]");
+    const config_style = document.getElementById("setting_ez_use_style").querySelector("input[type=checkbox]");
 
     for (const mode of ['txt', 'img']) {
         const container = document.getElementById(`${mode}2img_ez-tags_cards_html`);
         container.classList.add("ez-tag-container");
+        if (config_style.checked)
+            container.classList.add("ez-style");
     }
 
-    EasyTagStyler.init();
+    if (config_category.checked)
+        EasyTagStyler.init();
 });

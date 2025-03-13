@@ -70,3 +70,48 @@
     z-index: unset;
     opacity: 0.1;
 }
+
+.ez-tag-container.ez-style .extra-network-cards {
+    padding: 0.5em;
+    user-select: none;
+}
+
+.ez-tag-container.ez-style .card {
+    background-image: linear-gradient(90deg, var(--button-secondary-background-fill), var(--button-primary-background-fill));
+    background-size: 105%;
+    height: 3em;
+    width: calc(10% - 2em);
+    min-width: 6em;
+    margin: 0.5em;
+}
+
+.ez-tag-container.ez-style .card .actions {
+    background: none;
+    box-shadow: none;
+    position: inherit;
+    width: 100%;
+    height: 100%;
+}
+
+.ez-tag-container.ez-style .card .actions .name {
+    display: inline-flex;
+    position: relative;
+    align-items: center;
+    width: 90%;
+    height: 100%;
+    left: 1em;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.ez-tag-container.ez-style .card .actions .additional {
+    display: none;
+}
+
+.ez-tag-container.ez-style .card .actions .description {
+    display: none;
+}
+
+.ez-tag-container.ez-style .card .button-row {
+    display: none
+}
